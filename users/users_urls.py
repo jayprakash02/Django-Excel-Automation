@@ -1,4 +1,3 @@
-from os import name
 from django.urls import path, include
 from .views import *
 from rest_framework_simplejwt.views import (
@@ -21,6 +20,6 @@ urlpatterns = [
          name="request-reset-email"),
     path('password-reset/<uidb64>/<token>/',
          PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
-     path('google/', GoogleSocialAuthView.as_view()),
-     path('check/',check)
+    path('google/', GoogleSocialAuthView.as_view()),
+    path('verify-aprover/', VerifyAprovers.as_view(), name='aprover-verify')
 ]

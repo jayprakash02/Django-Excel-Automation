@@ -143,7 +143,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'username', 'password']
+        fields = ['email', 'username', 'staff_type','password']
     
  #####No need for custom validation as validation now happens in the frontend#####
 
