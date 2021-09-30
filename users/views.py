@@ -61,6 +61,8 @@ class RegisterView(generics.GenericAPIView):
             serializer.save()
 
             user = CustomUser.objects.get(email=serializer.data['email'])
+            user.set_password(request.data['password'])
+            user.save()
             user_access_token = AccessToken.for_user(user)
             current_site = os.environ.get('FRONTEND_URL')
             relativeEmailLink = reverse('users:email-verify')
