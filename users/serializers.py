@@ -1,3 +1,4 @@
+from django.db.models import fields
 from .models import CustomUser
 from rest_framework import serializers
 from django.contrib import auth
@@ -9,6 +10,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 import os, string, random
+
+from users import models
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -214,3 +217,8 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
             return {
                 'newUser' : "User does not exist. New User Created"
             }
+
+class AproverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CustomUser
+        fields=['user_id','username','email']

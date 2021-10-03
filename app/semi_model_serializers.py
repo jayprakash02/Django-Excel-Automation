@@ -1,14 +1,37 @@
-from _typeshed import Self
-from django.db.models import fields
 from rest_framework import serializers
-from .semi_models import *
+from .models import *
 
 class IntensitySerializer(serializers.ModelSerializer):
     class Meta:
         model=Intensity
-        fields="__all__"
-
+        fields=['answer']
+        
 class FeelingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=Feelings
-        fields="__all__"
+        fields=['answer']
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Genre
+        fields=['answer']
+
+class DecadeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Decade
+        fields=['answer']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Category
+        fields=('answer','category_id')
+
+class SubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SubCategory
+        fields=['answer']
+
+class DummyListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=DummyList
+        fields=('answer','subCategory','category','genre','decade')

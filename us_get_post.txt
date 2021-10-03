@@ -1,0 +1,166 @@
+Open Question
+endpoint: 'app/openAPI/'
+question_type='LV' or 'LM' 
+GET:
+{
+	'Question':['Why would you do (this)?',Question2,..],
+	'Intensity':{
+				'Need': intensity_Need.data,
+				'Wish': intensity_Wish.data,
+				'Desire': intensity_Desire.data,
+				'Want': intensity_Want.data
+				},
+	'Feeling':{
+				'Spirit': feeling_Spirit.data,
+				'Profession': feeling_Profession.data,
+				'Purpose': feeling_Purpose.data, 
+				'Reward': feeling_Reward.data
+				},
+}
+POST:
+{
+	'question_type':'LV',
+	'ID':user_id,
+	'subject':
+	'tags':{"tags":["tag1","tag2",...."tagn"]}
+	'need':{"need":["1","2","3","4"]},
+	'wish':{"need":["1","2","3","4"]},
+	'desire':{"need":["1","2","3","4"]},
+	'want':{"need":["1","2","3","4"]}
+}
+example--
+{
+    "ID":"f627976f-6c7f-47ec-af3f-f405011b9fb0",
+    "question_type":"LV",
+    "subject":"painting",
+    "tags":{
+            "tags": [
+                "sports",
+                "water"
+                ]
+            },
+    "need":{
+        "need": [
+            "hello there",
+            "whats up",
+            "fine always",
+            "smooth life"
+            ]
+        },
+    "wish":{
+        "wish": [
+            "hello there",
+            "whats up",
+            "fine always",
+            "smooth life"
+            ]
+        },
+    "desire":{
+        "desire": [
+            "hello there",
+            "whats up",
+            "fine always",
+            "smooth life"
+            ]
+        },
+    "want":{
+        "want": [
+            "hello there",
+            "whats up",
+            "fine always",
+            "smooth life"
+            ]
+        }
+}
+
+Open Leading
+question_type='ID'
+endpoint: 'app/openleadingAPI/'
+GET:
+{
+	'Subject':['1','2',....'n']
+	'Question':['Why would you do (this)?',Question2,..],
+	'Intensity':{
+				'Need': intensity_Need.data,
+				'Wish': intensity_Wish.data,
+				'Desire': intensity_Desire.data,
+				'Want': intensity_Want.data
+				},
+	'Feeling':{
+				'Spirit': feeling_Spirit.data,
+				'Profession': feeling_Profession.data,
+				'Purpose': feeling_Purpose.data, 
+				'Reward': feeling_Reward.data
+				},
+}
+POST:
+{
+	'question_type':'ID',
+	'ID':user_id,
+	'subject':
+	'tags':{"tags":["tag1","tag2",...."tagn"]}
+	'need':{"need":["1","2","3","4"]},
+	'wish':{"need":["1","2","3","4"]},
+	'desire':{"need":["1","2","3","4"]},
+	'want':{"need":["1","2","3","4"]}
+}
+
+Closed
+question_type='ID' or 'DQ'
+endpoint: 'app/closedAPI'
+GET:
+param:question_type='ID'
+{
+	'Subject':['1','2',....'n']
+	'Question':['Why would you do (this)?',Question2,..],
+	'Intensity':{
+				'Need': intensity_Need.data,
+				'Wish': intensity_Wish.data,
+				'Desire': intensity_Desire.data,
+				'Want': intensity_Want.data
+				},
+	'Feeling':{
+				'Spirit': feeling_Spirit.data,
+				'Profession': feeling_Profession.data,
+				'Purpose': feeling_Purpose.data, 
+				'Reward': feeling_Reward.data
+				},
+}
+
+GET:
+param:question_type='DQ'
+{
+	'question':['Who', 'Which', 'Where', 'When', 'What'],
+	'decade': {`decade list`},
+	'category': {`category list with category_id`},
+	'genre': {`genre list`},
+	'word': ['best', 'worst', 'more intresting']
+}
+GET:category_id
+param:question_type='DQ' and category_id='<category_id that got selected'
+{
+	'sub_category': {`sub category list`},
+}
+
+POST:
+{
+	'question_type':'ID',
+	'ID':user_id,
+	'subject':
+	'tags':{"tags":["tag1","tag2",...."tagn"]}
+	'need':{"need":["1","2","3","4"]},
+	'wish':{"need":["1","2","3","4"]},
+	'desire':{"need":["1","2","3","4"]},
+	'want':{"need":["1","2","3","4"]}
+}
+POST:
+{
+	'question_type':'DQ',
+	'ID':user_id,
+	'question':'',
+	'decade': '',
+	'category':'',
+	'genre':'',
+	'word': '',
+	'selection':{'selection':[1,2]}
+}

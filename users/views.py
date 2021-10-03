@@ -11,6 +11,7 @@ from .serializers import (
     PhoneLoginSerializer,
     LogoutSerializer,
     GoogleSocialAuthSerializer,
+    AproverSerializer
 )
 from django.shortcuts import render
 from django.contrib.auth import authenticate

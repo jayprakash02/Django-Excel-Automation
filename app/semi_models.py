@@ -8,22 +8,40 @@ class Intensity(models.Model):
     answer=models.CharField(max_length=100)
     choice=models.CharField(choices=Gradient,max_length=10)
 
+    def __str__(self):
+        return self.answer
+
 class Feelings(models.Model):
     Gradient=[('Spirit','Spirit'),('Profession','Profession'),('Purpose','Purpose'),('Reward','Reward')]
     answer=models.CharField(max_length=100)
     choice=models.CharField(choices=Gradient,max_length=10)
 
+    def __str__(self):
+        return self.answer
+
 class Genre(models.Model):
     answer=models.CharField(max_length=100)
+    def __str__(self):
+        return self.answer
 
 class Decade(models.Model):
     answer=models.CharField(max_length=100)
+    def __str__(self):
+        return self.answer
 
 class Category(models.Model):
+    category_id=models.IntegerField(auto_created=True,primary_key=True)
     answer=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.answer
 
 class SubCategory(models.Model):
     answer=models.CharField(max_length=100)
+    category=models.ForeignKey(Category,related_name='category_belong',on_delete=CASCADE)
+
+    def __str__(self):
+        return self.answer
 
 class DummyList(models.Model):
     answer=models.CharField(max_length=100)
