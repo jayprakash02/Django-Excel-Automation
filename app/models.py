@@ -96,16 +96,16 @@ def create_excel(sender, instance, **kwargs):
         # print(Lf.need["need"][0])
         subject = Lf.subject
         situation = Lf.situation
-        sprit = ['Why would you do {0}?'.format(
+        sprit = ['When/If you are in {0},why would you {1}?'.format(situation,
             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
         sprit_weight = [0, 8, 6, 4, 2]
-        profession = ['When would you do {0}?'.format(
+        profession = ['When/If you are in {0},when would you do {1}?'.format(situation,
             subject), Lf.need["need"][1], Lf.wish["wish"][1], Lf.desire["desire"][1], Lf.want["want"][1]]
         profession_weight = [0, 2, 4, 6, 8]
-        purpose = ['Who would you do {0}?'.format(
+        purpose = ['When/If you are in {0},who would you do {1}?'.format(situation,
             subject), Lf.need["need"][2], Lf.wish["wish"][2], Lf.desire["desire"][2], Lf.want["want"][2]]
         purpose_weight = [0, 8, 6, 4, 2]
-        reward = ['What would you like in return for doing {0}?'.format(
+        reward = ['When/If you are in {0},what would you like in return for doing {1}?'.format(situation,
             subject), Lf.need["need"][3], Lf.wish["wish"][3], Lf.desire["desire"][3], Lf.want["want"][3]]
         reward_weight = [0, 2, 4, 6, 8]
 
@@ -125,16 +125,16 @@ def create_excel(sender, instance, **kwargs):
 
         subject = Lf.subject
         situation = Lf.situation
-        sprit = ['Why would you do {0}?'.format(
+        sprit = ['When/If you are in {0},why would you {1}?'.format(situation,
             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
         sprit_weight = [0, 8, 6, 4, 2]
-        profession = ['When would you do {0}?'.format(
+        profession = ['When/If you are in {0},when would you do {1}?'.format(situation,
             subject), Lf.need["need"][1], Lf.wish["wish"][1], Lf.desire["desire"][1], Lf.want["want"][1]]
         profession_weight = [0, 2, 4, 6, 8]
-        purpose = ['Who would you do {0}?'.format(
+        purpose = ['When/If you are in {0},who would you do {1}?'.format(situation,
             subject), Lf.need["need"][2], Lf.wish["wish"][2], Lf.desire["desire"][2], Lf.want["want"][2]]
         purpose_weight = [0, 8, 6, 4, 2]
-        reward = ['What would you like in return for doing {0}?'.format(
+        reward = ['When/If you are in {0},what would you like in return for doing {1}?'.format(situation,
             subject), Lf.need["need"][3], Lf.wish["wish"][3], Lf.desire["desire"][3], Lf.want["want"][3]]
         reward_weight = [0, 2, 4, 6, 8]
 
@@ -154,16 +154,16 @@ def create_excel(sender, instance, **kwargs):
 
         subject = Lf.subject
         situation = Lf.situation
-        sprit = ['Why would you do {0}?'.format(
+        sprit = ['When/If you are in {0},why would you {1}?'.format(situation,
             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
         sprit_weight = [0, 8, 6, 4, 2]
-        profession = ['When would you do {0}?'.format(
+        profession = ['When/If you are in {0},when would you do {1}?'.format(situation,
             subject), Lf.need["need"][1], Lf.wish["wish"][1], Lf.desire["desire"][1], Lf.want["want"][1]]
         profession_weight = [0, 2, 4, 6, 8]
-        purpose = ['Who would you do {0}?'.format(
+        purpose = ['When/If you are in {0},who would you do {1}?'.format(situation,
             subject), Lf.need["need"][2], Lf.wish["wish"][2], Lf.desire["desire"][2], Lf.want["want"][2]]
         purpose_weight = [0, 8, 6, 4, 2]
-        reward = ['What would you like in return for doing {0}?'.format(
+        reward = ['When/If you are in {0},what would you like in return for doing {1}?'.format(situation,
             subject), Lf.need["need"][3], Lf.wish["wish"][3], Lf.desire["desire"][3], Lf.want["want"][3]]
         reward_weight = [0, 2, 4, 6, 8]
 
