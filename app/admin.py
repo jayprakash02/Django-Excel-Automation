@@ -17,6 +17,7 @@ admin.site.register(Dummy)
 
 admin.site.register(Intensity,ImportExportAdmin)
 admin.site.register(Feelings,ImportExportAdmin)
+admin.site.register(Emotion)
 admin.site.register(Category,ImportExportAdmin)
 admin.site.register(SubCategory,ImportExportAdmin)
 admin.site.register(Genre,ImportExportAdmin)

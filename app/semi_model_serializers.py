@@ -1,3 +1,4 @@
+from jsonfield import fields
 from rest_framework import serializers
 from .models import *
 
@@ -9,8 +10,13 @@ class IntensitySerializer(serializers.ModelSerializer):
 class FeelingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=Feelings
-        fields=['answer']
+        fields=['answer','emotion']
 
+class EmotionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Emotion
+        fields=["id","feelings"]
+        
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model=Genre

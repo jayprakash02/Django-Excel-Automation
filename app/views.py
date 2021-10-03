@@ -9,6 +9,7 @@ from .serializer import LifeVectorSubjectSerializer
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from itertools import groupby
 
 from users.models import CustomUser
 from users.serializers import AproverSerializer
@@ -17,6 +18,18 @@ from .semi_models import *
 from .semi_model_serializers import *
 
 from django.utils.datastructures import MultiValueDictKeyError
+
+
+def groupby_emotion(data):
+    def key_func(k): return k['emotion']
+    res = []
+    for k, g in groupby(sorted(data, key=key_func), key=key_func):
+        obj = {'emotion': k,  'answer': []}
+        for group in g:
+            obj['answer'].append(group['answer'])
+        res.append(obj)
+    data = res
+    return data
 
 
 class ClosedQuestionAPI(APIView):
@@ -58,6 +71,18 @@ class ClosedQuestionAPI(APIView):
                 subject = LifeVectorSubjectSerializer(
                     LifeVector.objects.all(), many=True)
 
+                emotion_Spirit = EmotionSerializer(
+                    Emotion.objects.filter(choice='Spirit'), many=True).data
+                emotion_Profession = EmotionSerializer(
+                    Emotion.objects.filter(choice='Profession'), many=True).data
+                emotion_Purpose = EmotionSerializer(
+                    Emotion.objects.filter(choice='Purpose'), many=True).data
+                emotion_Reward = EmotionSerializer(
+                    Emotion.objects.filter(choice='Reward'), many=True).data
+
+                emotion = {"Sprit": emotion_Spirit, "Profession": emotion_Profession,
+                           "Purpose": emotion_Purpose, "Reward": emotion_Reward}
+
                 intensity_Need = IntensitySerializer(
                     Intensity.objects.filter(choice='Need'), many=True)
                 intensity_Wish = IntensitySerializer(
@@ -71,16 +96,23 @@ class ClosedQuestionAPI(APIView):
                              'Desire': intensity_Desire.data, 'Want': intensity_Want.data}
 
                 feeling_Spirit = FeelingsSerializer(
-                    Feelings.objects.filter(choice='Spirit'), many=True)
-                feeling_Profession = FeelingsSerializer(
-                    Feelings.objects.filter(choice='Profesesion'), many=True)
-                feeling_Purpose = FeelingsSerializer(
-                    Feelings.objects.filter(choice='Purpose'), many=True)
-                feeling_Reward = FeelingsSerializer(
-                    Feelings.objects.filter(choice='Reward'), many=True)
+                    Feelings.objects.filter(choice='Spirit'), many=True).data
+                feeling_Spirit = groupby_emotion(feeling_Spirit)
 
-                feeling = {'Spirit': feeling_Spirit.data, 'Profession': feeling_Profession.data,
-                           'Purpose': feeling_Purpose.data, 'Reward': feeling_Reward.data}
+                feeling_Profession = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Profesesion'), many=True).data
+                feeling_Profession = groupby_emotion(feeling_Profession)
+
+                feeling_Purpose = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Purpose'), many=True).data
+                feeling_Purpose = groupby_emotion(feeling_Purpose)
+
+                feeling_Reward = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Reward'), many=True).data
+                feeling_Reward = groupby_emotion(feeling_Reward)
+
+                feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
+                           'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
                 question1 = 'Why would you do (this)?'
                 question2 = 'When would you do (this)?'
@@ -89,7 +121,7 @@ class ClosedQuestionAPI(APIView):
 
                 question = [question1, question2, question3, question4]
 
-                data = {'Aprover': user_data.data, 'Subject': subject.data, 'Question': question,
+                data = {'Aprover': user_data.data, 'Subject': subject.data, 'Question': question, 'Emotion': emotion,
                         'Intensity': intensity, 'Feeling': feeling}
 
                 return Response(data, status=status.HTTP_202_ACCEPTED)
@@ -103,15 +135,16 @@ class ClosedQuestionAPI(APIView):
             user_id = self.request.data["question_type"]
             user_instance = CustomUser.objects.get(user_id=user_id)
             if question_type == 'ID':
-                if self.request.data.__contains__("subject") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
+                if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
                     tags = self.request.data["tags"]
                     need = self.request.data["need"]
                     wish = self.request.data["wish"]
                     desire = self.request.data["desire"]
                     want = self.request.data["want"]
+                    situation = self.request.data["situation"]
                     lf_instance = LifeVector.objects.create(
-                        subject=subject, tags=tags, need=need, wish=wish, desire=desire, want=want)
+                        subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, IDummy=lf_instance)
@@ -146,6 +179,18 @@ class OpenLeadingQuestionAPI(APIView):
         subject = LifeVectorSubjectSerializer(
             LifeVector.objects.all(), many=True)
 
+        emotion_Spirit = EmotionSerializer(
+            Emotion.objects.filter(choice='Spirit'), many=True).data
+        emotion_Profession = EmotionSerializer(
+            Emotion.objects.filter(choice='Profession'), many=True).data
+        emotion_Purpose = EmotionSerializer(
+            Emotion.objects.filter(choice='Purpose'), many=True).data
+        emotion_Reward = EmotionSerializer(
+            Emotion.objects.filter(choice='Reward'), many=True).data
+
+        emotion = {"Sprit": emotion_Spirit, "Profession": emotion_Profession,
+                   "Purpose": emotion_Purpose, "Reward": emotion_Reward}
+
         intensity_Need = IntensitySerializer(
             Intensity.objects.filter(choice='Need'), many=True)
         intensity_Wish = IntensitySerializer(
@@ -159,16 +204,23 @@ class OpenLeadingQuestionAPI(APIView):
                      'Desire': intensity_Desire.data, 'Want': intensity_Want.data}
 
         feeling_Spirit = FeelingsSerializer(
-            Feelings.objects.filter(choice='Spirit'), many=True)
-        feeling_Profession = FeelingsSerializer(
-            Feelings.objects.filter(choice='Profesesion'), many=True)
-        feeling_Purpose = FeelingsSerializer(
-            Feelings.objects.filter(choice='Purpose'), many=True)
-        feeling_Reward = FeelingsSerializer(
-            Feelings.objects.filter(choice='Reward'), many=True)
+            Feelings.objects.filter(choice='Spirit'), many=True).data
+        feeling_Spirit = groupby_emotion(feeling_Spirit)
 
-        feeling = {'Spirit': feeling_Spirit.data, 'Profession': feeling_Profession.data,
-                   'Purpose': feeling_Purpose.data, 'Reward': feeling_Reward.data}
+        feeling_Profession = FeelingsSerializer(
+            Feelings.objects.filter(choice='Profesesion'), many=True).data
+        feeling_Profession = groupby_emotion(feeling_Profession)
+
+        feeling_Purpose = FeelingsSerializer(
+            Feelings.objects.filter(choice='Purpose'), many=True).data
+        feeling_Purpose = groupby_emotion(feeling_Purpose)
+
+        feeling_Reward = FeelingsSerializer(
+            Feelings.objects.filter(choice='Reward'), many=True).data
+        feeling_Reward = groupby_emotion(feeling_Reward)
+
+        feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
+                   'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
         question1 = 'Why would you do (this)?'
         question2 = 'When would you do (this)?'
@@ -177,7 +229,7 @@ class OpenLeadingQuestionAPI(APIView):
 
         question = [question1, question2, question3, question4]
 
-        data = {'Aprover': user_data.data, 'Subject': subject.data, 'Question': question,
+        data = {'Aprover': user_data.data, 'Subject': subject.data, 'Question': question, 'Emotion': emotion,
                 'Intensity': intensity, 'Feeling': feeling}
 
         return Response(data, status=status.HTTP_202_ACCEPTED)
@@ -188,15 +240,16 @@ class OpenLeadingQuestionAPI(APIView):
             user_id = self.request.data["question_type"]
             user_instance = CustomUser.objects.get(user_id=user_id)
             if question_type == 'ID':
-                if self.request.data.__contains__("subject") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
+                if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
                     tags = self.request.data["tags"]
                     need = self.request.data["need"]
                     wish = self.request.data["wish"]
                     desire = self.request.data["desire"]
                     want = self.request.data["want"]
+                    situation = self.request.data["situation"]
                     lf_instance = LifeVector.objects.create(
-                        subject=subject, tags=tags, need=need, wish=wish, desire=desire, want=want)
+                        subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = OpenLeading.objects.create(
                         question_type=question_type, user=user_instance, IDummy=lf_instance)
@@ -213,6 +266,18 @@ class OpenQuestionAPI(APIView):
         user_data = AproverSerializer(
             CustomUser.objects.filter(staff_type='A'), many=True)
 
+        emotion_Spirit = EmotionSerializer(
+            Emotion.objects.filter(choice='Spirit'), many=True).data
+        emotion_Profession = EmotionSerializer(
+            Emotion.objects.filter(choice='Profession'), many=True).data
+        emotion_Purpose = EmotionSerializer(
+            Emotion.objects.filter(choice='Purpose'), many=True).data
+        emotion_Reward = EmotionSerializer(
+            Emotion.objects.filter(choice='Reward'), many=True).data
+
+        emotion = {"Sprit": emotion_Spirit, "Profession": emotion_Profession,
+                   "Purpose": emotion_Purpose, "Reward": emotion_Reward}
+
         intensity_Need = IntensitySerializer(
             Intensity.objects.filter(choice='Need'), many=True)
         intensity_Wish = IntensitySerializer(
@@ -226,16 +291,23 @@ class OpenQuestionAPI(APIView):
                      'Desire': intensity_Desire.data, 'Want': intensity_Want.data}
 
         feeling_Spirit = FeelingsSerializer(
-            Feelings.objects.filter(choice='Spirit'), many=True)
-        feeling_Profession = FeelingsSerializer(
-            Feelings.objects.filter(choice='Profesesion'), many=True)
-        feeling_Purpose = FeelingsSerializer(
-            Feelings.objects.filter(choice='Purpose'), many=True)
-        feeling_Reward = FeelingsSerializer(
-            Feelings.objects.filter(choice='Reward'), many=True)
+            Feelings.objects.filter(choice='Spirit'), many=True).data
+        feeling_Spirit = groupby_emotion(feeling_Spirit)
 
-        feeling = {'Spirit': feeling_Spirit.data, 'Profession': feeling_Profession.data,
-                   'Purpose': feeling_Purpose.data, 'Reward': feeling_Reward.data}
+        feeling_Profession = FeelingsSerializer(
+            Feelings.objects.filter(choice='Profesesion'), many=True).data
+        feeling_Profession = groupby_emotion(feeling_Profession)
+
+        feeling_Purpose = FeelingsSerializer(
+            Feelings.objects.filter(choice='Purpose'), many=True).data
+        feeling_Purpose = groupby_emotion(feeling_Purpose)
+
+        feeling_Reward = FeelingsSerializer(
+            Feelings.objects.filter(choice='Reward'), many=True).data
+        feeling_Reward = groupby_emotion(feeling_Reward)
+
+        feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
+                   'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
         question1 = 'Why would you do (this)?'
         question2 = 'When would you do (this)?'
@@ -244,7 +316,7 @@ class OpenQuestionAPI(APIView):
 
         question = [question1, question2, question3, question4]
 
-        data = {'Aprover': user_data.data, 'Question': question,
+        data = {'Aprover': user_data.data, 'Question': question, 'Emotion': emotion,
                 'Intensity': intensity, 'Feeling': feeling}
 
         return Response(data, status=status.HTTP_202_ACCEPTED)
@@ -255,15 +327,16 @@ class OpenQuestionAPI(APIView):
             user_id = self.request.data["ID"]
             user_instance = CustomUser.objects.get(user_id=user_id)
             if question_type == 'LV':
-                if self.request.data.__contains__("subject") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
+                if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
                     tags = self.request.data["tags"]
                     need = self.request.data["need"]
                     wish = self.request.data["wish"]
                     desire = self.request.data["desire"]
                     want = self.request.data["want"]
+                    situation = self.request.data["situation"]
                     lf_instance = LifeVector.objects.create(
-                        subject=subject, tags=tags, need=need, wish=wish, desire=desire, want=want)
+                        subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, Lf=lf_instance)

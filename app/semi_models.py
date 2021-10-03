@@ -1,5 +1,6 @@
 from typing import Callable
 from django.db import models
+from django.db.models.base import Model
 from django.db.models.deletion import CASCADE
 from jsonfield import JSONField
 
@@ -11,9 +12,18 @@ class Intensity(models.Model):
     def __str__(self):
         return self.answer
 
+class Emotion(models.Model):
+    Gradient=[('Spirit','Spirit'),('Profession','Profession'),('Purpose','Purpose'),('Reward','Reward')]
+    choice=models.CharField(choices=Gradient,max_length=10,null=True)
+    feelings=models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.feelings+' | '+self.choice
+
 class Feelings(models.Model):
     Gradient=[('Spirit','Spirit'),('Profession','Profession'),('Purpose','Purpose'),('Reward','Reward')]
     answer=models.CharField(max_length=100)
+    emotion=models.ForeignKey(Emotion,null=True,blank=True,on_delete=CASCADE,related_name="feelings_emotion")
     choice=models.CharField(choices=Gradient,max_length=10)
 
     def __str__(self):

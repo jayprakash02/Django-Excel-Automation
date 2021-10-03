@@ -32,11 +32,13 @@ class Dummy(models.Model):
 
 class LifeVector(models.Model):
     subject = models.CharField(max_length=300)
+    sitution = models.CharField(max_length=300,null=True)
     tags = JSONField(null=True)
     need = JSONField()
     wish = JSONField()
     desire = JSONField()
     want = JSONField()
+    
 
     def __str__(self):
         return self.subject
@@ -93,6 +95,7 @@ def create_excel(sender, instance, **kwargs):
         Lf = instance.Lf
         # print(Lf.need["need"][0])
         subject = Lf.subject
+        situation = Lf.situation
         sprit = ['Why would you do {0}?'.format(
             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
         sprit_weight = [0, 8, 6, 4, 2]
@@ -121,6 +124,7 @@ def create_excel(sender, instance, **kwargs):
         Lf = instance.IDummy
 
         subject = Lf.subject
+        situation = Lf.situation
         sprit = ['Why would you do {0}?'.format(
             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
         sprit_weight = [0, 8, 6, 4, 2]
@@ -149,6 +153,7 @@ def create_excel(sender, instance, **kwargs):
         Lf = instance.IDummy
 
         subject = Lf.subject
+        situation = Lf.situation
         sprit = ['Why would you do {0}?'.format(
             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
         sprit_weight = [0, 8, 6, 4, 2]
