@@ -32,7 +32,7 @@ class Dummy(models.Model):
 
 class LifeVector(models.Model):
     subject = models.CharField(max_length=300)
-    sitution = models.CharField(max_length=300,null=True)
+    situation = models.CharField(max_length=300,null=True)
     tags = JSONField(null=True)
     need = JSONField()
     wish = JSONField()
