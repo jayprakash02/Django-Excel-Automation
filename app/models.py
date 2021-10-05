@@ -54,7 +54,7 @@ class Qpen(models.Model):
     # Lm=models.ForeignKey(LearningMethod,null=True,blank=True,on_delete=CASCADE)
 
     excelLink=models.URLField(blank=True,null=True)
-
+    approverEmail=models.ForeignKey(CustomUser, on_delete=CASCADE, related_name="open_approver", null=True)
     def __str__(self):
         if self.question_type=='LV':
             return self.question_type+' | '+self.Lf.subject+' | '+self.user.email
@@ -72,6 +72,7 @@ class Closed(models.Model):
     Dummy = models.ForeignKey(Dummy, null=True, blank=True, on_delete=CASCADE)
 
     excelLink=models.URLField(blank=True,null=True)
+    approverEmail=models.ForeignKey(CustomUser, on_delete=CASCADE, related_name="closed_approver", null=True)
 
     def __str__(self):
         if self.question_type=='DQ':
@@ -89,7 +90,7 @@ class OpenLeading(models.Model):
         LifeVector, null=True, blank=True, on_delete=CASCADE)
 
     excelLink=models.URLField(blank=True,null=True)
-    
+    approverEmail=models.ForeignKey(CustomUser, on_delete=CASCADE, related_name="openleading_approver", null=True)
     def __str__(self):
         if self.question_type=='ID':
             return self.question_type+' | '+self.IDummy.subject+' | '+self.user.email
@@ -100,17 +101,17 @@ from googleapiclient.discovery import build
 
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive',
          'https://www.googleapis.com/auth/drive.metadata.readonly']
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    '/home/jay/Downloads/Freelance/project_Sameer_US/backend/service-gcp-key.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name('service-gcp-key.json', scope)
 
 # authorize the clientsheet
 service_excel = build('sheets', 'v4', credentials=creds)
 service_drive = build('drive', 'v2', credentials=creds)
 
+DEBUG=False
 
 @receiver(post_save, sender=Qpen, dispatch_uid="open_create_excel")
 def create_excel(sender, instance, **kwargs):
-    if instance.question_type == 'LV':
+    if instance.question_type == 'LV' and DEBUG:
         Lf = instance.Lf
         # print(Lf.need["need"][0])
         subject = Lf.subject
@@ -132,15 +133,15 @@ def create_excel(sender, instance, **kwargs):
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
         df = pd.DataFrame(dict)
 
-        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email='unijay02@gmail.com', admin_email=['unijay12@gmail.com'])
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
 
-    elif instance.question_type == 'LM':
+    elif instance.question_type == 'LM' and DEBUG:
         pass
 
 
 @receiver(post_save, sender=OpenLeading, dispatch_uid="open_leading_create_excel")
 def create_excel(sender, instance, **kwargs):
-    if instance.question_type == 'ID':
+    if instance.question_type == 'ID' and DEBUG:
         Lf = instance.IDummy
 
         subject = Lf.subject
@@ -161,15 +162,18 @@ def create_excel(sender, instance, **kwargs):
         dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
 
-        Util.excel_gen_LF(dict)
+        df = pd.DataFrame(dict)
 
-    elif instance.question_type == 'LM':
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+
+
+    elif instance.question_type == 'LM' and DEBUG:
         pass
 
 
 @receiver(post_save, sender=Closed, dispatch_uid="closed_create_excel")
 def create_excel(sender, instance, **kwargs):
-    if instance.question_type == 'ID':
+    if instance.question_type == 'ID' and DEBUG:
         Lf = instance.IDummy
 
         subject = Lf.subject
@@ -190,9 +194,12 @@ def create_excel(sender, instance, **kwargs):
         dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
 
-        Util.excel_gen_LF(dict)
+        df = pd.DataFrame(dict)
 
-    elif instance.question_type == 'DQ':
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+
+
+    elif instance.question_type == 'DQ' and DEBUG:
         dummy = instance.Dummy
         parameters = [dummy.question_type, dummy.category,
                       dummy.sub_category, dummy.decade, dummy.genre, dummy.word]
@@ -206,4 +213,7 @@ def create_excel(sender, instance, **kwargs):
 
         dict = {'': name_parameters, 'Input': parameters,
                 'Question Formed': question, 'Answer Selected': answer}
-        Util.excel_gen_DQ(dict)
+        df = pd.DataFrame(dict)
+
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+

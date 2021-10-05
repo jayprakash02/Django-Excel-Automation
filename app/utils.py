@@ -32,18 +32,20 @@ class SpreadsheetSnippets(threading.Thread):
         self.service_drive = service_drive
         threading.Thread.__init__(self)
 
-    def run(self, data, title, approver_email, admin_email):
+    def run(self, data, title, approver_email, admin_email,question_type):
         spreadsheetID = self.create(title=title)
         # print('Sheet created :'+spreadsheetID)
         self.addData(data=data, spreadsheetID=spreadsheetID)
         # print('Data Added')
-        self.moveData(file_id=spreadsheetID,folder_id='1W1z4j5PHxAUjr4H8tsWJAXb6vS86zAVh')
+        self.moveData(file_id=spreadsheetID,
+                      folder_id='1W1z4j5PHxAUjr4H8tsWJAXb6vS86zAVh')
         # print('Move success')
         self.setPermisionAdmin(spreadsheetID=spreadsheetID, email=admin_email)
         # print('Permission Added for Admin')
         self.setPermisionApprover(
             spreadsheetID=spreadsheetID, email=approver_email)
         # print('Permission Added for Approver')
+        self.styleUpdate(spreadsheetID=spreadsheetID,sheetID=0,question_type=question_type)
 
     def create(self, title):
         service = self.service_excel
@@ -61,10 +63,12 @@ class SpreadsheetSnippets(threading.Thread):
 
     def moveData(self, file_id, folder_id):
         service = self.service_drive
-        file = service.files().get(fileId=file_id,fields='parents').execute()
-        previous_parents = ",".join([parent["id"] for parent in file.get('parents')])
+        file = service.files().get(fileId=file_id, fields='parents').execute()
+        previous_parents = ",".join([parent["id"]
+                                    for parent in file.get('parents')])
         # Move the file to the new folder
-        file = service.files().update(fileId=file_id,addParents=folder_id,removeParents=previous_parents,fields='id, parents').execute()
+        file = service.files().update(fileId=file_id, addParents=folder_id,
+                                      removeParents=previous_parents, fields='id, parents').execute()
 
     def addData(self, data, spreadsheetID):
         d2g.upload(data, spreadsheetID, credentials=creds, row_names=True)
@@ -101,8 +105,83 @@ class SpreadsheetSnippets(threading.Thread):
             print('An error occurred: %s' % error)
         return None
 
-    def styleUpdate(self):
-        pass
+    def styleUpdate(self, spreadsheetID, sheetID,question_type):
+        service = self.service_excel
+        requests = []
+        if question_type=='LF':
+            requests.append({
+                "mergeCells": {
+                    "range": {
+                        "sheetId": sheetID,
+                            "startRowIndex": 0,
+                            "endRowIndex": 2,
+                            "startColumnIndex": 1,
+                            "endColumnIndex": 3
+                            },
+                    "mergeType": "MERGE_ROWS"
+                }
+            })
+            requests.append({
+                "mergeCells": {
+                    "range": {
+                        "sheetId": sheetID,
+                            "startRowIndex": 0,
+                            "endRowIndex": 2,
+                            "startColumnIndex": 3,
+                            "endColumnIndex": 5
+                            },
+                    "mergeType": "MERGE_ROWS"
+                }
+            })
+            requests.append({
+                "mergeCells": {
+                    "range": {
+                        "sheetId": sheetID,
+                            "startRowIndex": 0,
+                            "endRowIndex": 2,
+                            "startColumnIndex": 5,
+                            "endColumnIndex": 7
+                            },
+                    "mergeType": "MERGE_ROWS"
+                }
+            })
+            requests.append({
+                "mergeCells": {
+                    "range": {
+                        "sheetId": sheetID,
+                            "startRowIndex": 0,
+                            "endRowIndex": 2,
+                            "startColumnIndex": 7,
+                            "endColumnIndex": 9
+                            },
+                    "mergeType": "MERGE_ROWS"
+                }
+            })
+        
+        elif question_type=='DQ':
+            requests.append({
+                "mergeCells": {
+                    "range": {
+                        "sheetId": sheetID,
+                            "startRowIndex": 2,
+                            "endRowIndex": 7,
+                            "startColumnIndex": 3,
+                            "endColumnIndex": 3
+                            },
+                    "mergeType": "MERGE_COLUMNS"
+                }
+            })
+
+
+        body = {
+            'requests': requests
+        }
+        response = service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheetID,
+            body=body).execute()
+
+        # [END sheets_batch_update]
+        print(response)
 
 
 class ExcelGenLF(threading.Thread):
@@ -186,6 +265,5 @@ class Util:
         ExcelGenDQ(data).start()
 
     @staticmethod
-    def excel_sheet(service_excel, service_drive, data, title, approver_email, admin_email):
-        SpreadsheetSnippets(service_excel, service_drive).run(
-            data, title, approver_email, admin_email)
+    def excel_sheet(service_excel, service_drive, data, title, approver_email, admin_email,question_type):
+        SpreadsheetSnippets(service_excel, service_drive).run(data, title, approver_email, admin_email,question_type)

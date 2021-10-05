@@ -152,7 +152,7 @@ class ClosedQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = Closed.objects.create(
-                        question_type=question_type, user=user_instance, IDummy=lf_instance)
+                        question_type=question_type, user=user_instance,approverEmail=approver ,IDummy=lf_instance)
                     question_instance.save()
                     approver_instance.excelLink = question_instance.excelLink
                     approver_instance.linkCreated = True
@@ -172,7 +172,7 @@ class ClosedQuestionAPI(APIView):
                         question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection=selection)
                     dummy_intance.save()
                     question_instance = Closed.objects.create(
-                        question_type=question_type, user=user_instance, Dummy=dummy_intance)
+                        question_type=question_type, user=user_instance,approverEmail=approver ,Dummy=dummy_intance)
                     question_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Dummy Question', status=status.HTTP_400_BAD_REQUEST)
@@ -263,7 +263,7 @@ class OpenLeadingQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = OpenLeading.objects.create(
-                        question_type=question_type, user=user_instance, IDummy=lf_instance)
+                        question_type=question_type, user=user_instance,approverEmail=approver ,IDummy=lf_instance)
                     question_instance.save()
                     approver_instance.excelLink = question_instance.excelLink
                     approver_instance.linkCreated = True
@@ -356,7 +356,7 @@ class OpenQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     openquestion_instance = Qpen.objects.create(
-                        question_type=question_type, user=user_instance, Lf=lf_instance)
+                        question_type=question_type, user=user_instance,approverEmail=approver ,Lf=lf_instance)
                     openquestion_instance.save()
                     approver_instance.excelLink = openquestion_instance.excelLink
                     approver_instance.linkCreated = True
