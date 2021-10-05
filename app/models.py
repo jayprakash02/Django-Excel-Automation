@@ -95,6 +95,19 @@ class OpenLeading(models.Model):
             return self.question_type+' | '+self.IDummy.subject+' | '+self.user.email
 
 
+from oauth2client.service_account import ServiceAccountCredentials
+from googleapiclient.discovery import build
+
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive',
+         'https://www.googleapis.com/auth/drive.metadata.readonly']
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    '/home/jay/Downloads/Freelance/project_Sameer_US/backend/service-gcp-key.json', scope)
+
+# authorize the clientsheet
+service_excel = build('sheets', 'v4', credentials=creds)
+service_drive = build('drive', 'v2', credentials=creds)
+
+
 @receiver(post_save, sender=Qpen, dispatch_uid="open_create_excel")
 def create_excel(sender, instance, **kwargs):
     if instance.question_type == 'LV':
@@ -117,8 +130,9 @@ def create_excel(sender, instance, **kwargs):
 
         dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
+        df = pd.DataFrame(dict)
 
-        Util.excel_gen_LF(dict)
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email='unijay02@gmail.com', admin_email=['unijay12@gmail.com'])
 
     elif instance.question_type == 'LM':
         pass

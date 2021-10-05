@@ -82,7 +82,7 @@ class ClosedQuestionAPI(APIView):
                 emotion_Reward = EmotionSerializer(
                     Emotion.objects.filter(choice='Reward'), many=True).data
 
-                emotion = {"Sprit": emotion_Spirit, "Profession": emotion_Profession,
+                emotion = {"Spirit": emotion_Spirit, "Profession": emotion_Profession,
                            "Purpose": emotion_Purpose, "Reward": emotion_Reward}
 
                 intensity_Need = IntensitySerializer(
@@ -196,7 +196,7 @@ class OpenLeadingQuestionAPI(APIView):
         emotion_Reward = EmotionSerializer(
             Emotion.objects.filter(choice='Reward'), many=True).data
 
-        emotion = {"Sprit": emotion_Spirit, "Profession": emotion_Profession,
+        emotion = {"Spirit": emotion_Spirit, "Profession": emotion_Profession,
                    "Purpose": emotion_Purpose, "Reward": emotion_Reward}
 
         intensity_Need = IntensitySerializer(
@@ -289,7 +289,7 @@ class OpenQuestionAPI(APIView):
         emotion_Reward = EmotionSerializer(
             Emotion.objects.filter(choice='Reward'), many=True).data
 
-        emotion = {"Sprit": emotion_Spirit, "Profession": emotion_Profession,
+        emotion = {"Spirit": emotion_Spirit, "Profession": emotion_Profession,
                    "Purpose": emotion_Purpose, "Reward": emotion_Reward}
 
         intensity_Need = IntensitySerializer(

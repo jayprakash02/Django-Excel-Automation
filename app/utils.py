@@ -8,28 +8,102 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 
+from oauth2client.service_account import ServiceAccountCredentials
 
-class SpreadsheetSnippets(object):
-    def __init__(self, data,service):
-        self.data = data
-        self.service = service
+from googleapiclient.discovery import build
+from apiclient import errors
+from df2gspread import df2gspread as d2g
+# define the scope
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive',
+         'https://www.googleapis.com/auth/drive.metadata.readonly']
+
+# add credentials to the account
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    '/home/jay/Downloads/Freelance/project_Sameer_US/backend/service-gcp-key.json', scope)
+
+# authorize the clientsheet
+service_excel = build('sheets', 'v4', credentials=creds)
+service_drive = build('drive', 'v2', credentials=creds)
+
+
+class SpreadsheetSnippets(threading.Thread):
+    def __init__(self, service_excel, service_drive):
+        self.service_excel = service_excel
+        self.service_drive = service_drive
         threading.Thread.__init__(self)
 
+    def run(self, data, title, approver_email, admin_email):
+        spreadsheetID = self.create(title=title)
+        # print('Sheet created :'+spreadsheetID)
+        self.addData(data=data, spreadsheetID=spreadsheetID)
+        # print('Data Added')
+        self.moveData(file_id=spreadsheetID,folder_id='1W1z4j5PHxAUjr4H8tsWJAXb6vS86zAVh')
+        # print('Move success')
+        self.setPermisionAdmin(spreadsheetID=spreadsheetID, email=admin_email)
+        # print('Permission Added for Admin')
+        self.setPermisionApprover(
+            spreadsheetID=spreadsheetID, email=approver_email)
+        # print('Permission Added for Approver')
+
     def create(self, title):
-        service = self.service
+        service = self.service_excel
         # [START sheets_create]
+        folder_id = '1W1z4j5PHxAUjr4H8tsWJAXb6vS86zAVh'
         spreadsheet = {
             'properties': {
                 'title': title
             }
         }
-        spreadsheet = service.spreadsheets().create(body=spreadsheet,
-                                            fields='spreadsheetId').execute()
+        spreadsheet = service.spreadsheets().create(
+            body=spreadsheet, fields='spreadsheetId').execute()
         # [END sheets_create]
         return spreadsheet.get('spreadsheetId')
 
-    def run(self):
+    def moveData(self, file_id, folder_id):
+        service = self.service_drive
+        file = service.files().get(fileId=file_id,fields='parents').execute()
+        previous_parents = ",".join([parent["id"] for parent in file.get('parents')])
+        # Move the file to the new folder
+        file = service.files().update(fileId=file_id,addParents=folder_id,removeParents=previous_parents,fields='id, parents').execute()
+
+    def addData(self, data, spreadsheetID):
+        d2g.upload(data, spreadsheetID, credentials=creds, row_names=True)
+
+    def setPermisionApprover(self, spreadsheetID, email):
+        self.insert_permission(spreadsheetID, email, 'user', 'writer')
+
+    def setPermisionAdmin(self, spreadsheetID, email):
+        self.insert_permission(spreadsheetID, email, 'user', 'owner')
+
+    def insert_permission(self, file_id, value, perm_type, role):
+        service = self.service_drive
+        """Insert a new permission.
+
+        Args:
+            service: Drive API service instance.
+            file_id: ID of the file to insert permission for.
+            value: User or group e-mail address, domain name or None for 'default'
+                type.
+            perm_type: The value 'user', 'group', 'domain' or 'default'.
+            role: The value 'owner', 'writer' or 'reader'.
+        Returns:
+            The inserted permission if successful, None otherwise.
+        """
+        new_permission = {
+            'value': value,
+            'type': perm_type,
+            'role': role
+        }
+        try:
+            return service.permissions().insert(
+                fileId=file_id, body=new_permission).execute()
+        except errors.HttpError as error:
+            print('An error occurred: %s' % error)
+        return None
+
+    def styleUpdate(self):
         pass
+
 
 class ExcelGenLF(threading.Thread):
 
@@ -61,6 +135,7 @@ class ExcelGenLF(threading.Thread):
 
         wb.save("pandas_openpyxl.xlsx")
 
+
 class ExcelGenDQ(threading.Thread):
 
     def __init__(self, data):
@@ -79,7 +154,6 @@ class ExcelGenDQ(threading.Thread):
         ws.delete_cols(1)
 
         ws.merge_cells('C3:C8')
-        
 
         wb.save("pandas_openpyxl.xlsx")
 
@@ -110,3 +184,8 @@ class Util:
     @staticmethod
     def excel_gen_DQ(data):
         ExcelGenDQ(data).start()
+
+    @staticmethod
+    def excel_sheet(service_excel, service_drive, data, title, approver_email, admin_email):
+        SpreadsheetSnippets(service_excel, service_drive).run(
+            data, title, approver_email, admin_email)

@@ -262,11 +262,11 @@ class VerifyMobile(views.APIView):
 
 
 class VerifyApprovers(views.APIView):
-    def get(self,request):
+    def get(self, request):
         user_id = request.GET.get('id')
-        if CustomUser.objects.filter(user_id=user_id).exists() :
-            user=CustomUser.objects.get(user_id=user_id)
-            user.staff_type='A'
+        if CustomUser.objects.filter(user_id=user_id).exists():
+            user = CustomUser.objects.get(user_id=user_id)
+            user.staff_type = 'A'
             user.save()
-            return Response('User is now Approver',status=status.HTTP_202_ACCEPTED)
-        return Response('User does not exist',status=status.HTTP_400_BAD_REQUEST)
+            return Response('User is now Approver', status=status.HTTP_202_ACCEPTED)
+        return Response('User does not exist', status=status.HTTP_400_BAD_REQUEST)
