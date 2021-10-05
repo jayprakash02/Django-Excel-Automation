@@ -134,7 +134,7 @@ class ClosedQuestionAPI(APIView):
     def post(self, request):
         if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID") and self.request.data.__contains__("approver"):
             question_type = self.request.data["question_type"]
-            user_id = self.request.data["question_type"]
+            user_id = self.request.data["ID"]
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
@@ -245,7 +245,7 @@ class OpenLeadingQuestionAPI(APIView):
     def post(self, request):
         if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID") and self.request.data.__contains__("approver"):
             question_type = self.request.data["question_type"]
-            user_id = self.request.data["question_type"]
+            user_id = self.request.data["ID"]
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
