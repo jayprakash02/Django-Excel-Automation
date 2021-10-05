@@ -102,7 +102,7 @@ class ClosedQuestionAPI(APIView):
                 feeling_Spirit = groupby_emotion(feeling_Spirit)
 
                 feeling_Profession = FeelingsSerializer(
-                    Feelings.objects.filter(choice='Profesesion'), many=True).data
+                    Feelings.objects.filter(choice='Profession'), many=True).data
                 feeling_Profession = groupby_emotion(feeling_Profession)
 
                 feeling_Purpose = FeelingsSerializer(
@@ -216,7 +216,7 @@ class OpenLeadingQuestionAPI(APIView):
         feeling_Spirit = groupby_emotion(feeling_Spirit)
 
         feeling_Profession = FeelingsSerializer(
-            Feelings.objects.filter(choice='Profesesion'), many=True).data
+            Feelings.objects.filter(choice='Profession'), many=True).data
         feeling_Profession = groupby_emotion(feeling_Profession)
 
         feeling_Purpose = FeelingsSerializer(
@@ -309,7 +309,7 @@ class OpenQuestionAPI(APIView):
         feeling_Spirit = groupby_emotion(feeling_Spirit)
 
         feeling_Profession = FeelingsSerializer(
-            Feelings.objects.filter(choice='Profesesion'), many=True).data
+            Feelings.objects.filter(choice='Profession'), many=True).data
         feeling_Profession = groupby_emotion(feeling_Profession)
 
         feeling_Purpose = FeelingsSerializer(
