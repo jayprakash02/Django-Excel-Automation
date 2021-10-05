@@ -21,5 +21,5 @@ urlpatterns = [
     path('password-reset/<uidb64>/<token>/',
          PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
     path('google/', GoogleSocialAuthView.as_view()),
-    path('verify-aprover/', VerifyAprovers.as_view(), name='aprover-verify')
+    path('verify-approver/', VerifyApprovers.as_view(), name='approver-verify')
 ]

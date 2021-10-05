@@ -218,7 +218,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
                 'newUser' : "User does not exist. New User Created"
             }
 
-class AproverSerializer(serializers.ModelSerializer):
+class ApproverSerializer(serializers.ModelSerializer):
     class Meta:
         model=CustomUser
         fields=['user_id','username','email']

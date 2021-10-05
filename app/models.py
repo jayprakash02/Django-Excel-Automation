@@ -53,6 +53,8 @@ class Qpen(models.Model):
                            blank=True, on_delete=CASCADE)
     # Lm=models.ForeignKey(LearningMethod,null=True,blank=True,on_delete=CASCADE)
 
+    excelLink=models.URLField(blank=True,null=True)
+
     def __str__(self):
         if self.question_type=='LV':
             return self.question_type+' | '+self.Lf.subject+' | '+self.user.email
@@ -69,6 +71,8 @@ class Closed(models.Model):
         LifeVector, null=True, blank=True, on_delete=CASCADE)
     Dummy = models.ForeignKey(Dummy, null=True, blank=True, on_delete=CASCADE)
 
+    excelLink=models.URLField(blank=True,null=True)
+
     def __str__(self):
         if self.question_type=='DQ':
             return self.question_type+' | '+self.Dummy.question_type+' | '+self.user.email
@@ -83,6 +87,8 @@ class OpenLeading(models.Model):
         CustomUser, on_delete=CASCADE, related_name="open_leading_question", null=False)
     IDummy = models.ForeignKey(
         LifeVector, null=True, blank=True, on_delete=CASCADE)
+
+    excelLink=models.URLField(blank=True,null=True)
     
     def __str__(self):
         if self.question_type=='ID':

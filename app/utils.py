@@ -8,6 +8,29 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 
+
+class SpreadsheetSnippets(object):
+    def __init__(self, data,service):
+        self.data = data
+        self.service = service
+        threading.Thread.__init__(self)
+
+    def create(self, title):
+        service = self.service
+        # [START sheets_create]
+        spreadsheet = {
+            'properties': {
+                'title': title
+            }
+        }
+        spreadsheet = service.spreadsheets().create(body=spreadsheet,
+                                            fields='spreadsheetId').execute()
+        # [END sheets_create]
+        return spreadsheet.get('spreadsheetId')
+
+    def run(self):
+        pass
+
 class ExcelGenLF(threading.Thread):
 
     def __init__(self, data):

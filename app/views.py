@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework import status
+
+from notification.models import ApproverNotification
 from .serializer import LifeVectorSubjectSerializer
 
 from drf_yasg.utils import swagger_auto_schema
@@ -12,7 +14,7 @@ from drf_yasg import openapi
 from itertools import groupby
 
 from users.models import CustomUser
-from users.serializers import AproverSerializer
+from users.serializers import ApproverSerializer
 from .models import *
 from .semi_models import *
 from .semi_model_serializers import *
@@ -43,7 +45,7 @@ class ClosedQuestionAPI(APIView):
 
         if request.query_params["question_type"]:
 
-            user_data = AproverSerializer(
+            user_data = ApproverSerializer(
                 CustomUser.objects.filter(staff_type='A'), many=True)
             question_type = request.query_params["question_type"]
             if question_type == 'DQ':
@@ -63,7 +65,7 @@ class ClosedQuestionAPI(APIView):
                 decade = DecadeSerializer(Decade.objects.all(), many=True).data
                 genre = GenreSerializer(Genre.objects.all(), many=True).data
                 word = ['best', 'worst', 'more intresting']
-                data = {'Aprover': user_data.data, 'question': question, 'category': category,
+                data = {'Approver': user_data.data, 'question': question, 'category': category,
                         'decade': decade, 'genre': genre, 'word': word}
                 return Response(data, status=status.HTTP_202_ACCEPTED)
 
@@ -121,7 +123,7 @@ class ClosedQuestionAPI(APIView):
 
                 question = [question1, question2, question3, question4]
 
-                data = {'Aprover': user_data.data, 'Subject': subject.data, 'Question': question, 'Emotion': emotion,
+                data = {'Approver': user_data.data, 'Subject': subject.data, 'Question': question, 'Emotion': emotion,
                         'Intensity': intensity, 'Feeling': feeling}
 
                 return Response(data, status=status.HTTP_202_ACCEPTED)
@@ -130,10 +132,13 @@ class ClosedQuestionAPI(APIView):
         return Response('Pass Question type', status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID"):
+        if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID") and self.request.data.__contains__("approver"):
             question_type = self.request.data["question_type"]
             user_id = self.request.data["question_type"]
             user_instance = CustomUser.objects.get(user_id=user_id)
+            approver_id = self.request.data["approver"]
+            approver = get_object_or_404(CustomUser, user_id=approver_id)
+            approver_instance = ApproverNotification.objects.create(user=approver)
             if question_type == 'ID':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -149,6 +154,9 @@ class ClosedQuestionAPI(APIView):
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, IDummy=lf_instance)
                     question_instance.save()
+                    approver_instance.excelLink = question_instance.excelLink
+                    approver_instance.linkCreated = True
+                    approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Inteligent Dummy', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'DQ':
@@ -173,7 +181,7 @@ class ClosedQuestionAPI(APIView):
 
 class OpenLeadingQuestionAPI(APIView):
     def get(self, request):
-        user_data = AproverSerializer(
+        user_data = ApproverSerializer(
             CustomUser.objects.filter(staff_type='A'), many=True)
 
         subject = LifeVectorSubjectSerializer(
@@ -229,16 +237,19 @@ class OpenLeadingQuestionAPI(APIView):
 
         question = [question1, question2, question3, question4]
 
-        data = {'Aprover': user_data.data, 'Subject': subject.data, 'Question': question, 'Emotion': emotion,
+        data = {'Approver': user_data.data, 'Subject': subject.data, 'Question': question, 'Emotion': emotion,
                 'Intensity': intensity, 'Feeling': feeling}
 
         return Response(data, status=status.HTTP_202_ACCEPTED)
 
     def post(self, request):
-        if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID"):
+        if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID") and self.request.data.__contains__("approver"):
             question_type = self.request.data["question_type"]
             user_id = self.request.data["question_type"]
             user_instance = CustomUser.objects.get(user_id=user_id)
+            approver_id = self.request.data["approver"]
+            approver = get_object_or_404(CustomUser, user_id=approver_id)
+            approver_instance = ApproverNotification.objects.create(user=approver)
             if question_type == 'ID':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -254,6 +265,9 @@ class OpenLeadingQuestionAPI(APIView):
                     question_instance = OpenLeading.objects.create(
                         question_type=question_type, user=user_instance, IDummy=lf_instance)
                     question_instance.save()
+                    approver_instance.excelLink = question_instance.excelLink
+                    approver_instance.linkCreated = True
+                    approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Intelligent Dummy', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'LM':
@@ -263,7 +277,7 @@ class OpenLeadingQuestionAPI(APIView):
 
 class OpenQuestionAPI(APIView):
     def get(self, request):
-        user_data = AproverSerializer(
+        user_data = ApproverSerializer(
             CustomUser.objects.filter(staff_type='A'), many=True)
 
         emotion_Spirit = EmotionSerializer(
@@ -316,16 +330,19 @@ class OpenQuestionAPI(APIView):
 
         question = [question1, question2, question3, question4]
 
-        data = {'Aprover': user_data.data, 'Question': question, 'Emotion': emotion,
+        data = {'Approver': user_data.data, 'Question': question, 'Emotion': emotion,
                 'Intensity': intensity, 'Feeling': feeling}
 
         return Response(data, status=status.HTTP_202_ACCEPTED)
 
     def post(self, request):
-        if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID"):
+        if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID") and self.request.data.__contains__("approver"):
             question_type = self.request.data["question_type"]
             user_id = self.request.data["ID"]
             user_instance = CustomUser.objects.get(user_id=user_id)
+            approver_id = self.request.data["approver"]
+            approver = get_object_or_404(CustomUser, user_id=approver_id)
+            approver_instance = ApproverNotification.objects.create(user=approver)
             if question_type == 'LV':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -341,6 +358,9 @@ class OpenQuestionAPI(APIView):
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, Lf=lf_instance)
                     openquestion_instance.save()
+                    approver_instance.excelLink = openquestion_instance.excelLink
+                    approver_instance.linkCreated = True
+                    approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Life Vector', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'LM':

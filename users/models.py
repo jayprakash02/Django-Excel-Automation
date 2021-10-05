@@ -15,7 +15,7 @@ GENDER = (
 )
 STAFF = (
     ('C', 'Creator'),
-    ('A', 'Aprover'),
+    ('A', 'Approver'),
 )
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):

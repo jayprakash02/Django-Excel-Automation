@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 
     # apps
     'users',
-    'app'
+    'app',
+    'notification'
 ]
 
 MIDDLEWARE = [

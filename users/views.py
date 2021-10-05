@@ -11,7 +11,7 @@ from .serializers import (
     PhoneLoginSerializer,
     LogoutSerializer,
     GoogleSocialAuthSerializer,
-    AproverSerializer
+    ApproverSerializer
 )
 from django.shortcuts import render
 from django.contrib.auth import authenticate
@@ -83,13 +83,13 @@ class RegisterView(generics.GenericAPIView):
             if user.staff_type == 'A':
                 user.staff_type = 'C'
                 user.save()
-                relativeAproveLink = reverse('users:aprover-verify')
+                relativeApproveLink = reverse('users:approver-verify')
                 abs_emailurl = current_site + \
-                    relativeAproveLink + "?id="+str(user.user_id)
+                    relativeApproveLink + "?id="+str(user.user_id)
                 email_body = 'Username: '+user.username + '\nEmail: '+user.email + \
-                    '\nHad applied for the <strong> Aprovers </strong> position.\n Use the link below to Aproved\n'+abs_emailurl
+                    '\nHad applied for the <strong> Approvers </strong> position.\n Use the link below to Approved\n'+abs_emailurl
                 data = {'email_body': email_body, 'to_email': ADMIN_MAIL,
-                        'email_subject': 'Verify the Aprover '+str(user.email), 'email_link': abs_emailurl}
+                        'email_subject': 'Verify the Approver '+str(user.email), 'email_link': abs_emailurl}
                 Util.send_email(data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -261,12 +261,12 @@ class VerifyMobile(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyAprovers(views.APIView):
+class VerifyApprovers(views.APIView):
     def get(self,request):
         user_id = request.GET.get('id')
         if CustomUser.objects.filter(user_id=user_id).exists() :
             user=CustomUser.objects.get(user_id=user_id)
             user.staff_type='A'
             user.save()
-            return Response('User is now Aprover',status=status.HTTP_202_ACCEPTED)
+            return Response('User is now Approver',status=status.HTTP_202_ACCEPTED)
         return Response('User does not exist',status=status.HTTP_400_BAD_REQUEST)
