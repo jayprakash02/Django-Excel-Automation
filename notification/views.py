@@ -4,6 +4,7 @@ from rest_framework import status
 # Create your views here.
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+from notification.models import ApproverNotification
 from notification.serializers import ANotificationSerializer
 
 from users.models import CustomUser
@@ -23,3 +24,9 @@ class PendingNotifications(APIView):
             notifiction = ANotificationSerializer(user.approver_notification.all(), many=True)
             return Response(notifiction.data,status=status.HTTP_202_ACCEPTED)
         return Response('user_id missing',status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self,request):
+        if request.data.__contains__("notifcation_id"):
+            notifcation_id=request.data["notifcation_id"]
+            noti = get_object_or_404(ApproverNotification, notifcation_id=notifcation_id)
+            noti.workDone=True
