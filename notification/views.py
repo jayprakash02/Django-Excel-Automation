@@ -21,7 +21,7 @@ class PendingNotifications(APIView):
         if request.query_params["user_id"]:
             user_id = request.query_params["user_id"]
             user = get_object_or_404(CustomUser, user_id=user_id)
-            notifiction = ANotificationSerializer(user.approver_notification.all(), many=True)
+            notifiction = ANotificationSerializer(user.approver_notification.filter(workDone=False), many=True)
             return Response(notifiction.data,status=status.HTTP_202_ACCEPTED)
         return Response('user_id missing',status=status.HTTP_400_BAD_REQUEST)
 
@@ -30,3 +30,4 @@ class PendingNotifications(APIView):
             notifcation_id=request.data["notifcation_id"]
             noti = get_object_or_404(ApproverNotification, notifcation_id=notifcation_id)
             noti.workDone=True
+            noti.save()
