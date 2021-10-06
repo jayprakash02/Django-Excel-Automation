@@ -31,3 +31,5 @@ class PendingNotifications(APIView):
             noti = get_object_or_404(ApproverNotification, notifcation_id=notifcation_id)
             noti.workDone=True
             noti.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response('notifcation_id missing',status=status.HTTP_400_BAD_REQUEST)
