@@ -39,16 +39,16 @@ class Decade(models.Model):
     def __str__(self):
         return self.answer
 
-class Category(models.Model):
-    category_id=models.IntegerField(auto_created=True,primary_key=True)
+class SubCategory(models.Model):
     answer=models.CharField(max_length=100)
 
     def __str__(self):
         return self.answer
 
-class SubCategory(models.Model):
+class Category(models.Model):
+    category_id=models.IntegerField(auto_created=True,primary_key=True)
     answer=models.CharField(max_length=100)
-    category=models.ForeignKey(Category,related_name='category_belong',on_delete=CASCADE)
+    sub_category=models.ManyToManyField(SubCategory,blank=True,null=True)
 
     def __str__(self):
         return self.answer

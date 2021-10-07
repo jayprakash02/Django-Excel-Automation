@@ -27,15 +27,16 @@ class DecadeSerializer(serializers.ModelSerializer):
         model=Decade
         fields=['answer']
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Category
-        fields=('answer','category_id')
-
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=SubCategory
         fields=['answer']
+
+class CategorySerializer(serializers.ModelSerializer):
+    sub_category=SubCategorySerializer(read_only=True, many=True)
+    class Meta:
+        model=Category
+        fields=('answer','sub_category')
 
 class DummyListSerializer(serializers.ModelSerializer):
     class Meta:

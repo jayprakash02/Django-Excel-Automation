@@ -37,10 +37,8 @@ def groupby_emotion(data):
 class ClosedQuestionAPI(APIView):
     question_type = openapi.Parameter(
         'question_type', in_=openapi.IN_QUERY, description='DQ or ID', type=openapi.TYPE_STRING, required=True)
-    category_id = openapi.Parameter(
-        'category_id', in_=openapi.IN_QUERY, description='Category ID to filter Sub category', type=openapi.TYPE_STRING, required=False)
 
-    @swagger_auto_schema(manual_parameters=[question_type, category_id])
+    @swagger_auto_schema(manual_parameters=[question_type])
     def get(self, request):
 
         if request.query_params["question_type"]:
@@ -49,16 +47,6 @@ class ClosedQuestionAPI(APIView):
                 CustomUser.objects.filter(staff_type='A'), many=True)
             question_type = request.query_params["question_type"]
             if question_type == 'DQ':
-                try:
-                    category_id = request.query_params['category_id']
-                    category = get_object_or_404(
-                        Category, category_id=category_id)
-                    sub_category = SubCategorySerializer(
-                        category.category_belong.all())
-                    return Response({'sub_category': sub_category}, status=status.HTTP_202_ACCEPTED)
-
-                except MultiValueDictKeyError:
-                    pass
                 question = ['Who', 'Which', 'Where', 'When', 'What']
                 category = CategorySerializer(
                     Category.objects.all(), many=True).data

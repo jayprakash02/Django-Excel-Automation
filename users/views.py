@@ -124,7 +124,6 @@ class LoginAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        print(request.data)
         if serializer.is_valid(raise_exception=True):
             response = Response(serializer.data, status=status.HTTP_200_OK)
             response.set_cookie(
