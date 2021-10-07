@@ -23,7 +23,7 @@ class Dummy(models.Model):
     decade = models.CharField(max_length=10)
     genre = models.CharField(max_length=10)
     word = models.CharField(max_length=10)
-    selection = JSONField()
+    selection = models.CharField(max_length=100)
 
 # class LearningMethod(models.Model):
 #     sitution=models.CharField(max_length=300)
@@ -209,7 +209,7 @@ def create_excel(sender, instance, **kwargs):
             ' was the '+dummy.decade+' in ' + dummy.genre+' of the '+dummy.word
         print(question_string)
         question = [str(question_string), '', '', '', '', '']
-        answer = [dummy.selection['1'], dummy.selection['2'], '', '', '', '']
+        answer = [dummy.selection, '', '', '', '', '']
 
         dict = {'': name_parameters, 'Input': parameters,
                 'Question Formed': question, 'Answer Selected': answer}

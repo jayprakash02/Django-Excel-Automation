@@ -37,8 +37,9 @@ def groupby_emotion(data):
 class ClosedQuestionAPI(APIView):
     question_type = openapi.Parameter(
         'question_type', in_=openapi.IN_QUERY, description='DQ or ID', type=openapi.TYPE_STRING, required=True)
-
-    @swagger_auto_schema(manual_parameters=[question_type])
+    answer=openapi.Parameter(
+        'answer', in_=openapi.IN_QUERY, description='Input Answer for DQ', type=openapi.TYPE_STRING, required=False)
+    @swagger_auto_schema(manual_parameters=[question_type,answer])
     def get(self, request):
 
         if request.query_params["question_type"]:
@@ -47,15 +48,15 @@ class ClosedQuestionAPI(APIView):
                 CustomUser.objects.filter(staff_type='A'), many=True)
             question_type = request.query_params["question_type"]
             if question_type == 'DQ':
-                question = ['Who', 'Which', 'Where', 'When', 'What']
-                category = CategorySerializer(
-                    Category.objects.all(), many=True).data
-                decade = DecadeSerializer(Decade.objects.all(), many=True).data
-                genre = GenreSerializer(Genre.objects.all(), many=True).data
-                word = ['best', 'worst', 'more intresting']
-                data = {'Approver': user_data.data, 'question': question, 'category': category,
-                        'decade': decade, 'genre': genre, 'word': word}
-                return Response(data, status=status.HTTP_202_ACCEPTED)
+                try:
+                    if request.query_params["answer"]:
+                        answer_selected=get_object_or_404(DummyList,answer=request.query_params["answer"])
+                        question_data=DummyListSerializer(answer_selected).data
+                        return Response(question_data, status=status.HTTP_202_ACCEPTED)
+                except:
+                    pass
+                answers=DummyAnswerSerializer(DummyList.objects.all(),many=True).data
+                return Response(answers, status=status.HTTP_202_ACCEPTED)
 
             elif question_type == 'ID':
                 subject = LifeVectorSubjectSerializer(
