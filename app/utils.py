@@ -41,8 +41,9 @@ class SpreadsheetSnippets(threading.Thread):
         # print('Move success')
         self.setPermisionAdmin(spreadsheetID=spreadsheetID, email=admin_email)
         # print('Permission Added for Admin')
-        self.setPermisionApprover(
-            spreadsheetID=spreadsheetID, email=approver_email)
+        if approver_email!='':
+            self.setPermisionApprover(
+                spreadsheetID=spreadsheetID, email=approver_email)
         # print('Permission Added for Approver')
         self.styleUpdate(spreadsheetID=spreadsheetID,sheetID=0,question_type=question_type)
 
