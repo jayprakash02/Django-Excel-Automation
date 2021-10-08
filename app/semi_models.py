@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.base import Model
 from django.db.models.deletion import CASCADE
 from jsonfield import JSONField
+from numpy import mod
 
 
 class Intensity(models.Model):
@@ -83,7 +84,7 @@ class WordTypeForDummy(models.Model):
 
     answer = models.CharField(
         choices=WORD_TYPE, max_length=20, default='best')
-    
+
     def __str__(self):
         return self.answer
 
@@ -100,6 +101,34 @@ class DummyList(models.Model):
         Decade, blank=True, related_name='dummylist_decade')
     word = models.ManyToManyField(
         WordTypeForDummy, blank=True, related_name='dummylist_word')
+
+    def __str__(self):
+        return self.answer
+
+
+class Visual(models.Model):
+    answer = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.answer
+
+
+class Auditory(models.Model):
+    answer = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.answer
+
+
+class Kinetic(models.Model):
+    answer = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.answer
+
+
+class General(models.Model):
+    answer = models.CharField(max_length=50)
 
     def __str__(self):
         return self.answer

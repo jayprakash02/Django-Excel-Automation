@@ -8,21 +8,53 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 
-from oauth2client.service_account import ServiceAccountCredentials
+from .credentials import creds
 
 from googleapiclient.discovery import build
 from apiclient import errors
 from df2gspread import df2gspread as d2g
 # define the scope
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive',
-         'https://www.googleapis.com/auth/drive.metadata.readonly']
 
-# add credentials to the account
-creds = ServiceAccountCredentials.from_json_keyfile_name('service-gcp-key.json', scope)
 
 # authorize the clientsheet
 service_excel = build('sheets', 'v4', credentials=creds)
 service_drive = build('drive', 'v2', credentials=creds)
+
+
+class SheetSnipets(threading.Thread):
+    def __init__(self, service_excel):
+        self.service_excel = service_excel
+        threading.Thread.__init__(self)
+
+    def run(self, data,sheet_id):
+
+        # The ID of the spreadsheet to update.
+        # TODO: Update placeholder value.
+
+        spreadsheet_id = sheet_id
+
+        # The A1 notation of a range to search for a logical table of data.
+        # Values will be appended after the last row of the table.
+        range_ = 'R[1]C[0]'  # TODO: Update placeholder value.
+
+        # How the input data should be interpreted.
+        value_input_option = 'RAW'          # TODO: Update placeholder value.
+
+        # How the input data should be inserted.
+        insert_data_option = 'INSERT_ROWS'  # TODO: Update placeholder value.
+
+        value_range_body = {
+            "values": [  # The data that was read or to be written. This is an array of arrays, the outer array representing all the data and each inner array representing a major dimension. Each item in the inner array corresponds with one cell. For output, empty trailing rows and columns will not be included. For input, supported value types are: bool, string, and double. Null values will be skipped. To set a cell to an empty value, set the string value to an empty string.
+                data
+            ],
+        }
+        try :
+            request = self.service_excel.spreadsheets().values().append(spreadsheetId=spreadsheet_id, range=range_,
+                                                                    valueInputOption=value_input_option, insertDataOption=insert_data_option, body=value_range_body)
+            response = request.execute()
+        except:
+            pass
+
 
 
 class SpreadsheetSnippets(threading.Thread):
@@ -31,7 +63,7 @@ class SpreadsheetSnippets(threading.Thread):
         self.service_drive = service_drive
         threading.Thread.__init__(self)
 
-    def run(self, data, title, approver_email, admin_email,question_type):
+    def run(self, data, title, approver_email, admin_email, question_type):
         spreadsheetID = self.create(title=title)
         # print('Sheet created :'+spreadsheetID)
         self.addData(data=data, spreadsheetID=spreadsheetID)
@@ -41,11 +73,12 @@ class SpreadsheetSnippets(threading.Thread):
         # print('Move success')
         self.setPermisionAdmin(spreadsheetID=spreadsheetID, email=admin_email)
         # print('Permission Added for Admin')
-        if approver_email!='':
+        if approver_email != '':
             self.setPermisionApprover(
                 spreadsheetID=spreadsheetID, email=approver_email)
         # print('Permission Added for Approver')
-        self.styleUpdate(spreadsheetID=spreadsheetID,sheetID=0,question_type=question_type)
+        self.styleUpdate(spreadsheetID=spreadsheetID,
+                         sheetID=0, question_type=question_type)
 
     def create(self, title):
         service = self.service_excel
@@ -105,10 +138,10 @@ class SpreadsheetSnippets(threading.Thread):
             print('An error occurred: %s' % error)
         return None
 
-    def styleUpdate(self, spreadsheetID, sheetID,question_type):
+    def styleUpdate(self, spreadsheetID, sheetID, question_type):
         service = self.service_excel
         requests = []
-        if question_type=='LF':
+        if question_type == 'LF':
             requests.append({
                 "mergeCells": {
                     "range": {
@@ -157,8 +190,8 @@ class SpreadsheetSnippets(threading.Thread):
                     "mergeType": "MERGE_ROWS"
                 }
             })
-        
-        elif question_type=='DQ':
+
+        elif question_type == 'DQ':
             requests.append({
                 "mergeCells": {
                     "range": {
@@ -171,7 +204,6 @@ class SpreadsheetSnippets(threading.Thread):
                     "mergeType": "MERGE_COLUMNS"
                 }
             })
-
 
         body = {
             'requests': requests
@@ -265,5 +297,10 @@ class Util:
         ExcelGenDQ(data).start()
 
     @staticmethod
-    def excel_sheet(service_excel, service_drive, data, title, approver_email, admin_email,question_type,filename):
-        SpreadsheetSnippets(service_excel, service_drive).run(data, title, approver_email, admin_email,question_type,filename)
+    def excel_sheet(service_excel, service_drive, data, title, approver_email, admin_email, question_type, filename):
+        SpreadsheetSnippets(service_excel, service_drive).run(
+            data, title, approver_email, admin_email, question_type, filename)
+
+    @staticmethod
+    def excel_sheet2(service_excel, row,sheet_id):
+        SheetSnipets(service_excel).run(data=row,sheet_id=sheet_id)

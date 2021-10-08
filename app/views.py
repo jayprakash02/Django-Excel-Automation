@@ -37,9 +37,10 @@ def groupby_emotion(data):
 class ClosedQuestionAPI(APIView):
     question_type = openapi.Parameter(
         'question_type', in_=openapi.IN_QUERY, description='DQ or ID', type=openapi.TYPE_STRING, required=True)
-    answer=openapi.Parameter(
+    answer = openapi.Parameter(
         'answer', in_=openapi.IN_QUERY, description='Input Answer for DQ', type=openapi.TYPE_STRING, required=False)
-    @swagger_auto_schema(manual_parameters=[question_type,answer])
+
+    @swagger_auto_schema(manual_parameters=[question_type, answer])
     def get(self, request):
 
         if request.query_params["question_type"]:
@@ -50,13 +51,16 @@ class ClosedQuestionAPI(APIView):
             if question_type == 'DQ':
                 try:
                     if request.query_params["answer"]:
-                        answer_selected=get_object_or_404(DummyList,answer=request.query_params["answer"])
-                        question_data=DummyListSerializer(answer_selected).data
+                        answer_selected = get_object_or_404(
+                            DummyList, answer=request.query_params["answer"])
+                        question_data = DummyListSerializer(
+                            answer_selected).data
                         return Response(question_data, status=status.HTTP_202_ACCEPTED)
                 except:
                     pass
-                answers=DummyAnswerSerializer(DummyList.objects.all(),many=True).data
-                data={'approver':user_data.data,'answers':answers}
+                answers = DummyAnswerSerializer(
+                    DummyList.objects.all(), many=True).data
+                data = {'approver': user_data.data, 'answers': answers}
                 return Response(data, status=status.HTTP_202_ACCEPTED)
 
             elif question_type == 'ID':
@@ -128,7 +132,8 @@ class ClosedQuestionAPI(APIView):
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
-            approver_instance = ApproverNotification.objects.create(user=approver)
+            approver_instance = ApproverNotification.objects.create(
+                user=approver)
             if question_type == 'ID':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -142,7 +147,7 @@ class ClosedQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = Closed.objects.create(
-                        question_type=question_type, user=user_instance,approverEmail=approver ,IDummy=lf_instance)
+                        question_type=question_type, user=user_instance, approverEmail=approver, IDummy=lf_instance)
                     question_instance.save()
                     approver_instance.excelLink = question_instance.excelLink
                     approver_instance.linkCreated = True
@@ -162,7 +167,7 @@ class ClosedQuestionAPI(APIView):
                         question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection=selection)
                     dummy_intance.save()
                     question_instance = Closed.objects.create(
-                        question_type=question_type, user=user_instance,approverEmail=approver ,Dummy=dummy_intance)
+                        question_type=question_type, user=user_instance, approverEmail=approver, Dummy=dummy_intance)
                     question_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Dummy Question', status=status.HTTP_400_BAD_REQUEST)
@@ -239,7 +244,8 @@ class OpenLeadingQuestionAPI(APIView):
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
-            approver_instance = ApproverNotification.objects.create(user=approver)
+            approver_instance = ApproverNotification.objects.create(
+                user=approver)
             if question_type == 'ID':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -253,7 +259,7 @@ class OpenLeadingQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = OpenLeading.objects.create(
-                        question_type=question_type, user=user_instance,approverEmail=approver ,IDummy=lf_instance)
+                        question_type=question_type, user=user_instance, approverEmail=approver, IDummy=lf_instance)
                     question_instance.save()
                     approver_instance.excelLink = question_instance.excelLink
                     approver_instance.linkCreated = True
@@ -266,64 +272,88 @@ class OpenLeadingQuestionAPI(APIView):
 
 
 class OpenQuestionAPI(APIView):
+    question_type = openapi.Parameter(
+        'question_type', in_=openapi.IN_QUERY, description='LF or LM', type=openapi.TYPE_STRING, required=True)
+
+    @swagger_auto_schema(manual_parameters=[question_type])
     def get(self, request):
-        user_data = ApproverSerializer(
-            CustomUser.objects.filter(staff_type='A'), many=True)
+        if request.query_params["question_type"]:
 
-        emotion_Spirit = EmotionSerializer(
-            Emotion.objects.filter(choice='Spirit'), many=True).data
-        emotion_Profession = EmotionSerializer(
-            Emotion.objects.filter(choice='Profession'), many=True).data
-        emotion_Purpose = EmotionSerializer(
-            Emotion.objects.filter(choice='Purpose'), many=True).data
-        emotion_Reward = EmotionSerializer(
-            Emotion.objects.filter(choice='Reward'), many=True).data
+            user_data = ApproverSerializer(
+                CustomUser.objects.filter(staff_type='A'), many=True)
+            question_type = request.query_params["question_type"]
+            if question_type == 'LF':
 
-        emotion = {"Spirit": emotion_Spirit, "Profession": emotion_Profession,
-                   "Purpose": emotion_Purpose, "Reward": emotion_Reward}
+                emotion_Spirit = EmotionSerializer(
+                    Emotion.objects.filter(choice='Spirit'), many=True).data
+                emotion_Profession = EmotionSerializer(
+                    Emotion.objects.filter(choice='Profession'), many=True).data
+                emotion_Purpose = EmotionSerializer(
+                    Emotion.objects.filter(choice='Purpose'), many=True).data
+                emotion_Reward = EmotionSerializer(
+                    Emotion.objects.filter(choice='Reward'), many=True).data
 
-        intensity_Need = IntensitySerializer(
-            Intensity.objects.filter(choice='Need'), many=True)
-        intensity_Wish = IntensitySerializer(
-            Intensity.objects.filter(choice='Wish'), many=True)
-        intensity_Desire = IntensitySerializer(
-            Intensity.objects.filter(choice='Desire'), many=True)
-        intensity_Want = IntensitySerializer(
-            Intensity.objects.filter(choice='Want'), many=True)
+                emotion = {"Spirit": emotion_Spirit, "Profession": emotion_Profession,
+                           "Purpose": emotion_Purpose, "Reward": emotion_Reward}
 
-        intensity = {'Need': intensity_Need.data, 'Wish': intensity_Wish.data,
-                     'Desire': intensity_Desire.data, 'Want': intensity_Want.data}
+                intensity_Need = IntensitySerializer(
+                    Intensity.objects.filter(choice='Need'), many=True)
+                intensity_Wish = IntensitySerializer(
+                    Intensity.objects.filter(choice='Wish'), many=True)
+                intensity_Desire = IntensitySerializer(
+                    Intensity.objects.filter(choice='Desire'), many=True)
+                intensity_Want = IntensitySerializer(
+                    Intensity.objects.filter(choice='Want'), many=True)
 
-        feeling_Spirit = FeelingsSerializer(
-            Feelings.objects.filter(choice='Spirit'), many=True).data
-        feeling_Spirit = groupby_emotion(feeling_Spirit)
+                intensity = {'Need': intensity_Need.data, 'Wish': intensity_Wish.data,
+                             'Desire': intensity_Desire.data, 'Want': intensity_Want.data}
 
-        feeling_Profession = FeelingsSerializer(
-            Feelings.objects.filter(choice='Profession'), many=True).data
-        feeling_Profession = groupby_emotion(feeling_Profession)
+                feeling_Spirit = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Spirit'), many=True).data
+                feeling_Spirit = groupby_emotion(feeling_Spirit)
 
-        feeling_Purpose = FeelingsSerializer(
-            Feelings.objects.filter(choice='Purpose'), many=True).data
-        feeling_Purpose = groupby_emotion(feeling_Purpose)
+                feeling_Profession = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Profession'), many=True).data
+                feeling_Profession = groupby_emotion(feeling_Profession)
 
-        feeling_Reward = FeelingsSerializer(
-            Feelings.objects.filter(choice='Reward'), many=True).data
-        feeling_Reward = groupby_emotion(feeling_Reward)
+                feeling_Purpose = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Purpose'), many=True).data
+                feeling_Purpose = groupby_emotion(feeling_Purpose)
 
-        feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
-                   'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
+                feeling_Reward = FeelingsSerializer(
+                    Feelings.objects.filter(choice='Reward'), many=True).data
+                feeling_Reward = groupby_emotion(feeling_Reward)
 
-        question1 = 'Why would you do (this)?'
-        question2 = 'When would you do (this)?'
-        question3 = 'Who would you do (this)?'
-        question4 = 'What would you like in return for doing (this)?'
+                feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
+                           'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
-        question = [question1, question2, question3, question4]
+                question1 = 'Why would you do (this)?'
+                question2 = 'When would you do (this)?'
+                question3 = 'Who would you do (this)?'
+                question4 = 'What would you like in return for doing (this)?'
 
-        data = {'Approver': user_data.data, 'Question': question, 'Emotion': emotion,
-                'Intensity': intensity, 'Feeling': feeling}
+                question = [question1, question2, question3, question4]
 
-        return Response(data, status=status.HTTP_202_ACCEPTED)
+                data = {'Approver': user_data.data, 'Question': question, 'Emotion': emotion,
+                        'Intensity': intensity, 'Feeling': feeling}
+
+                return Response(data, status=status.HTTP_202_ACCEPTED)
+
+            if question_type == 'LM':
+                visual_data = VisualSerializer(
+                    Visual.objects.all(), many=True).data
+                auditory_data = AuditorySerializer(
+                    Auditory.objects.all(), many=True).data
+                kinetic_data = KineticSerializer(
+                    Kinetic.objects.all(), many=True).data
+                general_data = GeneralSerializer(
+                    General.objects.all(), many=True).data
+
+                data = {'Approver': user_data.data,  'Visual': visual_data, 'Auditory': auditory_data, 'Kinetic': kinetic_data,
+                        'General': general_data}
+
+                return Response(data, status=status.HTTP_202_ACCEPTED)
+        return Response('question_id is missing', status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         if self.request.data.__contains__("question_type") and self.request.data.__contains__("ID") and self.request.data.__contains__("approver"):
@@ -332,7 +362,8 @@ class OpenQuestionAPI(APIView):
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
-            approver_instance = ApproverNotification.objects.create(user=approver)
+            approver_instance = ApproverNotification.objects.create(
+                user=approver)
             if question_type == 'LV':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -346,7 +377,7 @@ class OpenQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     openquestion_instance = Qpen.objects.create(
-                        question_type=question_type, user=user_instance,approverEmail=approver ,Lf=lf_instance)
+                        question_type=question_type, user=user_instance, approver=approver, Lf=lf_instance)
                     openquestion_instance.save()
                     approver_instance.excelLink = openquestion_instance.excelLink
                     approver_instance.linkCreated = True
@@ -354,5 +385,19 @@ class OpenQuestionAPI(APIView):
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Life Vector', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'LM':
-                pass
+                if self.request.data.__contains__("question") and self.request.data.__contains__("visual") and self.request.data.__contains__("auditory") and self.request.data.__contains__("kinetic") and self.request.data.__contains__("general"):
+                    question = self.request.data["question"]
+                    visual = self.request.data["question"]
+                    auditory = self.request.data["auditory"]
+                    kinetic = self.request.data["kinetic"]
+                    general = self.request.data["general"]
+
+                    lm_instance = LearningMethod.objects.create(
+                        question=question, kinetic=kinetic, visual=visual, auditory=auditory, general=general)
+                    lm_instance.save()
+                    openquestion_instance = Qpen.objects.create(
+                        question_type=question_type, user=user_instance, approver=approver, Lm=lm_instance)
+                    openquestion_instance.save()
+                    approver_instance.save()
+                    return Response(status=status.HTTP_202_ACCEPTED)
         return Response('Question Type or ID is missing', status=status.HTTP_400_BAD_REQUEST)

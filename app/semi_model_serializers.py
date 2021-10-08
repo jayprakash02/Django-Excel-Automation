@@ -75,3 +75,27 @@ class DummyAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = DummyList
         fields = ['answer']
+
+
+class VisualSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Visual
+        fields = ['answer']
+
+
+class AuditorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Auditory
+        fields = ['answer']
+
+
+class KineticSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Kinetic
+        fields = ['answer']
+
+
+class GeneralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = General
+        fields = ['answer']
