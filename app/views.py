@@ -56,7 +56,8 @@ class ClosedQuestionAPI(APIView):
                 except:
                     pass
                 answers=DummyAnswerSerializer(DummyList.objects.all(),many=True).data
-                return Response(answers, status=status.HTTP_202_ACCEPTED)
+                data={'approver':user_data.data,'answers':answers}
+                return Response(data, status=status.HTTP_202_ACCEPTED)
 
             elif question_type == 'ID':
                 subject = LifeVectorSubjectSerializer(

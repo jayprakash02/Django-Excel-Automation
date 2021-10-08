@@ -132,8 +132,8 @@ def create_excel(sender, instance, **kwargs):
         dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
         df = pd.DataFrame(dict)
-
-        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+        filename='after_'+instance.question_type+'_Subject:'+Lf.subject+'_Createdby:'+instance.user.email
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename, approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
 
     elif instance.question_type == 'LM' and DEBUG:
         pass
@@ -163,8 +163,8 @@ def create_excel(sender, instance, **kwargs):
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
 
         df = pd.DataFrame(dict)
-
-        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+        filename='after_'+instance.question_type+'_Subject:'+Lf.subject+'_Createdby:'+instance.user.email
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename, approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
 
 
     elif instance.question_type == 'LM' and DEBUG:
@@ -195,8 +195,8 @@ def create_excel(sender, instance, **kwargs):
                 'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
 
         df = pd.DataFrame(dict)
-
-        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+        filename='after_'+instance.question_type+'_Subject:'+Lf.subject+'_Createdby:'+instance.user.email
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename, approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
 
 
     elif instance.question_type == 'DQ' and DEBUG:
@@ -207,13 +207,12 @@ def create_excel(sender, instance, **kwargs):
                            'Sub Category', 'Decade', 'Genre', 'Word']
         question_string = dummy.question_type+' '+dummy.category+' by '+dummy.sub_category + \
             ' was the '+dummy.decade+' in ' + dummy.genre+' of the '+dummy.word
-        print(question_string)
         question = [str(question_string), '', '', '', '', '']
         answer = [dummy.selection, '', '', '', '', '']
 
         dict = {'': name_parameters, 'Input': parameters,
                 'Question Formed': question, 'Answer Selected': answer}
         df = pd.DataFrame(dict)
-
-        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title="lifevector", approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
+        filename='after_'+instance.question_type+'_Createdby:'+instance.user.email
+        Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename, approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'],question_type='LF')
 
