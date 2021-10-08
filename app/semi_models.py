@@ -73,6 +73,20 @@ class QuestionTypeForDummy(models.Model):
     question = models.CharField(
         choices=QUESTION_TYPE, max_length=5, default='Who')
 
+    def __str__(self):
+        return self.question
+
+
+class WordTypeForDummy(models.Model):
+    WORD_TYPE = [('best', 'best'), ('worst', 'worst'),
+                 ('more intresting', 'more intresting')]
+
+    answer = models.CharField(
+        choices=WORD_TYPE, max_length=20, default='best')
+    
+    def __str__(self):
+        return self.answer
+
 
 class DummyList(models.Model):
     answer = models.CharField(max_length=100)
@@ -84,3 +98,8 @@ class DummyList(models.Model):
         Genre, blank=True, related_name='dummylist_genre')
     decade = models.ManyToManyField(
         Decade, blank=True, related_name='dummylist_decade')
+    word = models.ManyToManyField(
+        WordTypeForDummy, blank=True, related_name='dummylist_word')
+
+    def __str__(self):
+        return self.answer
