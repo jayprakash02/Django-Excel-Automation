@@ -182,7 +182,7 @@ class ClosedQuestionAPI(APIView):
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, approverEmail=approver, Dummy=dummy_intance)
                     question_instance.save()
-                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Dummy Question').sheetID+'/edit#gid=0'
+                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Dummy Question', status=status.HTTP_400_BAD_REQUEST)
