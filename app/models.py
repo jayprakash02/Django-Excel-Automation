@@ -135,7 +135,7 @@ DEBUG = False
 
 @receiver(post_save, sender=Qpen, dispatch_uid="open_create_excel")
 def create_excel(sender, instance, **kwargs):
-    if instance.question_type == 'LV' and DEBUG:
+    if instance.question_type == 'LV' :
         Lf = instance.Lf
 
         subject = Lf.subject
@@ -153,7 +153,7 @@ def create_excel(sender, instance, **kwargs):
         Util.excel_sheet2(service_excel=service_excel,row=row3, sheet_id=sheet_id)
         Util.excel_sheet2(service_excel=service_excel,row=row4, sheet_id=sheet_id)
 
-    elif instance.question_type == 'LM' and DEBUG:
+    elif instance.question_type == 'LM':
         lm = instance.Lm
         row = ["Open", str(datetime.datetime.now()), lm.question, lm.visual, lm.auditory, lm.kinetic, lm.general, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(
             datetime.datetime.now()), lm.question, lm.visual, lm.auditory, lm.kinetic, lm.general, str(instance.user.user_id), str(instance.approver.user_id)]

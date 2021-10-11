@@ -113,9 +113,6 @@ class DummyAnswersList(models.Model):
         Genre, null=True, related_name='dummyanslist_genre',on_delete=CASCADE)
     decade = models.ForeignKey(
         Decade, null=True, related_name='dummyanslist_decade',on_delete=CASCADE)
-    word = models.ForeignKey(
-        WordTypeForDummy, null=True, related_name='dummyanslist_word',on_delete=CASCADE)
-
 
 
 class Visual(models.Model):
