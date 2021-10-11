@@ -201,8 +201,8 @@ def create_excel(sender, instance, **kwargs):
     elif instance.question_type == 'DQ' and DEBUG:
         dummy = instance.Dummy
         
-        row = ['Closed', str(datetime.datetime.now()), dummy.question_type, dummy.category, dummy.sub_category,dummy.answer, dummy.decade, dummy.genre, dummy.word, dummy.selection1,dummy.selection2, str(instance.user.user_id), str(instance.approverEmail.user_id), "", "", 'Closed', str(
-            datetime.datetime.now()), dummy.question_type, dummy.category, dummy.sub_category,dummy.answer, dummy.decade, dummy.genre, dummy.word, dummy.selection1,dummy.selection2, str(instance.user.user_id), str(instance.approverEmail.user_id)]
+        row = ['Closed', str(datetime.datetime.now()), dummy.question_type, dummy.category, dummy.sub_category,dummy.answer, dummy.decade, dummy.genre, dummy.word, dummy.selection1,dummy.selection2, str(instance.user.user_id), str(instance.approver.user_id), "", "", 'Closed', str(
+            datetime.datetime.now()), dummy.question_type, dummy.category, dummy.sub_category,dummy.answer, dummy.decade, dummy.genre, dummy.word, dummy.selection1,dummy.selection2, str(instance.user.user_id), str(instance.approver.user_id)]
 
         sheet_id = get_object_or_404(Sheet, question_type='Dummy').sheetID
         Util.excel_sheet2(service_excel=service_excel,
