@@ -124,7 +124,7 @@ from .credentials import creds
 service_excel = build('sheets', 'v4', credentials=creds)
 service_drive = build('drive', 'v2', credentials=creds)
 
-DEBUG = False
+DEBUG = True
 
 
 @receiver(post_save, sender=Qpen, dispatch_uid="open_create_excel")
