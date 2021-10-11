@@ -49,16 +49,25 @@ class ClosedQuestionAPI(APIView):
                 CustomUser.objects.filter(staff_type='A'), many=True)
             question_type = request.query_params["question_type"]
             if question_type == 'DQ':
-                # try:
-                if request.query_params["answer"]:
-                    answer_selected = get_object_or_404(
-                        DummyList, answer=request.query_params["answer"])
-                    question_data = DummyListSerializer(
-                        answer_selected).data
-                    selection_data=DummySelectionSerializer(DummyAnswersList.objects.all(),many=True).data
-                    return Response({"question":question_data,"selection":selection_data}, status=status.HTTP_202_ACCEPTED)
-                # except:
-                #     pass
+                try:
+                    if request.query_params["answer"]:
+                        answer_selected = get_object_or_404(
+                            DummyList, answer=request.query_params["answer"])
+                        question_data = DummyListSerializer(
+                            answer_selected).data
+                        return Response(question_data, status=status.HTTP_202_ACCEPTED)
+                except:
+                    pass
+                try:
+                    if request.query_params["sub_category"] and request.query_params["genre"] and request.query_params["decade"]:
+                        sub_category=get_object_or_404(SubCategory,answer=request.query_params["sub_category"])
+                        genre=get_object_or_404(Genre,answer=request.query_params["genre"])
+                        decade=get_object_or_404(Decade,answer=request.query_params["decade"])
+                        selection = DummyAnswersList.objects.filter(sub_category=sub_category).filter(genre=genre).filter(decade=decade)
+                        selection_data=DummySelectionSerializer(selection,many=True).data
+                        return Response(selection_data, status=status.HTTP_202_ACCEPTED)
+                except:
+                    pass
                 answers = DummyAnswerSerializer(
                     DummyList.objects.all(), many=True).data
                 data = {'approver': user_data.data, 'answers': answers}
@@ -390,7 +399,7 @@ class OpenQuestionAPI(APIView):
             elif question_type == 'LM':
                 if self.request.data.__contains__("question") and self.request.data.__contains__("visual") and self.request.data.__contains__("auditory") and self.request.data.__contains__("kinetic") and self.request.data.__contains__("general"):
                     question = self.request.data["question"]
-                    visual = self.request.data["question"]
+                    visual = self.request.data["visual"]
                     auditory = self.request.data["auditory"]
                     kinetic = self.request.data["kinetic"]
                     general = self.request.data["general"]
