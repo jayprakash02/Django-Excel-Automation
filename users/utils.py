@@ -50,4 +50,4 @@ class Util:
 
     @staticmethod
     def excel_sheet(service_drive,approver_email):
-        SpreadsheetSnippets(service_drive).setPermisionApprover(approver_email)
+        SetPermission(service_drive).setPermisionApprover(approver_email)
