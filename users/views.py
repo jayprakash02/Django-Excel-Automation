@@ -267,11 +267,13 @@ from app.credentials import creds
 service_drive = build('drive', 'v2', credentials=creds)
 class VerifyApprovers(views.APIView):
     def get(self, request):
-        user_id = request.GET.get('id')
-        if CustomUser.objects.filter(user_id=user_id).exists():
-            user = CustomUser.objects.get(user_id=user_id)
-            user.staff_type = 'A'
-            user.save()
-            Util.excel_sheet(service_drive,user.email)
-            return Response('User is now Approver', status=status.HTTP_202_ACCEPTED)
-        return Response('User does not exist', status=status.HTTP_400_BAD_REQUEST)
+        if request.query_params['id']:
+            user_id = request.query_params['id']
+            if CustomUser.objects.filter(user_id=user_id).exists():
+                user = CustomUser.objects.get(user_id=user_id)
+                user.staff_type = 'A'
+                user.save()
+                Util.excel_sheet(service_drive,user.email)
+                return Response('User is now Approver', status=status.HTTP_202_ACCEPTED)
+            return Response('User does not exist', status=status.HTTP_400_BAD_REQUEST)
+        return Response('id missing', status=status.HTTP_400_BAD_REQUEST)
