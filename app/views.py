@@ -159,7 +159,7 @@ class ClosedQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = Closed.objects.create(
-                        question_type=question_type, user=user_instance, approverEmail=approver, IDummy=lf_instance)
+                        question_type=question_type, user=user_instance, approver=approver, IDummy=lf_instance)
                     question_instance.save()
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
@@ -180,7 +180,7 @@ class ClosedQuestionAPI(APIView):
                         question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection1=selection1,selection2=selection2,answer=answer)
                     dummy_intance.save()
                     question_instance = Closed.objects.create(
-                        question_type=question_type, user=user_instance, approverEmail=approver, Dummy=dummy_intance)
+                        question_type=question_type, user=user_instance, approver=approver, Dummy=dummy_intance)
                     question_instance.save()
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
@@ -274,7 +274,7 @@ class OpenLeadingQuestionAPI(APIView):
                         subject=subject, tags=tags, need=need, situation=situation, wish=wish, desire=desire, want=want)
                     lf_instance.save()
                     question_instance = OpenLeading.objects.create(
-                        question_type=question_type, user=user_instance, approverEmail=approver, IDummy=lf_instance)
+                        question_type=question_type, user=user_instance, approver=approver, IDummy=lf_instance)
                     question_instance.save()
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
