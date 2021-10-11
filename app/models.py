@@ -91,7 +91,7 @@ class Closed(models.Model):
         LifeVector, null=True, blank=True, on_delete=CASCADE)
     Dummy = models.ForeignKey(Dummy, null=True, blank=True, on_delete=CASCADE)
 
-    approverEmail = models.ForeignKey(
+    approver = models.ForeignKey(
         CustomUser, on_delete=CASCADE, related_name="closed_approver", null=True)
     user = models.ForeignKey(
         CustomUser, on_delete=CASCADE, related_name="closed_question", null=False)
@@ -112,7 +112,7 @@ class OpenLeading(models.Model):
     user = models.ForeignKey(
         CustomUser, on_delete=CASCADE, related_name="open_leading_question", null=False)
 
-    approverEmail = models.ForeignKey(
+    approver = models.ForeignKey(
         CustomUser, on_delete=CASCADE, related_name="openleading_approver", null=True)
 
     def __str__(self):
