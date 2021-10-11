@@ -260,6 +260,9 @@ class VerifyMobile(views.APIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+from googleapiclient.discovery import build
 from app.credentials import creds
 service_drive = build('drive', 'v2', credentials=creds)
 class VerifyApprovers(views.APIView):
