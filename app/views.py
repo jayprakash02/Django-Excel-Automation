@@ -160,7 +160,7 @@ class ClosedQuestionAPI(APIView):
                     lf_instance.save()
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, IDummy=lf_instance)
-                    question_instance.save()
+    
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
@@ -181,7 +181,7 @@ class ClosedQuestionAPI(APIView):
                     dummy_intance.save()
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Dummy=dummy_intance)
-                    question_instance.save()
+
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
@@ -275,7 +275,7 @@ class OpenLeadingQuestionAPI(APIView):
                     lf_instance.save()
                     question_instance = OpenLeading.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, IDummy=lf_instance)
-                    question_instance.save()
+
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
                     approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
@@ -393,7 +393,6 @@ class OpenQuestionAPI(APIView):
                     lf_instance.save()
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Lf=lf_instance)
-                    openquestion_instance.save()
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Life Vector').sheetID+'/edit#gid=0'
                     approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
@@ -411,8 +410,6 @@ class OpenQuestionAPI(APIView):
                     lm_instance.save()
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Lm=lm_instance)
-                    openquestion_instance.save()
-                    approver_instance.save()
                     approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Learning Method').sheetID+'/edit#gid=0'
                     approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
