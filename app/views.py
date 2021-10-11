@@ -391,9 +391,6 @@ class OpenQuestionAPI(APIView):
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Lf=lf_instance)
                     openquestion_instance.save()
-                    approver_instance.excelLink = openquestion_instance.excelLink
-                    approver_instance.linkCreated = True
-                    approver_instance.save()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Life Vector', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'LM':
