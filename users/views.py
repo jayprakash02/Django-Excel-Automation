@@ -112,6 +112,7 @@ class VerifyEmail(views.APIView):
             if not user.email_verified:
                 user.email_verified = True
                 user.save()
+            
             return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as e:
             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
@@ -259,7 +260,8 @@ class VerifyMobile(views.APIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
-
+from app.credentials import creds
+service_drive = build('drive', 'v2', credentials=creds)
 class VerifyApprovers(views.APIView):
     def get(self, request):
         user_id = request.GET.get('id')
@@ -267,5 +269,6 @@ class VerifyApprovers(views.APIView):
             user = CustomUser.objects.get(user_id=user_id)
             user.staff_type = 'A'
             user.save()
+            Util.excel_sheet(service_drive,user.email)
             return Response('User is now Approver', status=status.HTTP_202_ACCEPTED)
         return Response('User does not exist', status=status.HTTP_400_BAD_REQUEST)
