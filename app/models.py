@@ -140,40 +140,18 @@ def create_excel(sender, instance, **kwargs):
 
         subject = Lf.subject
         situation = Lf.situation
-        # sprit = ['When/If you are in {0},why would you {1}?'.format(situation,
-        #                                                             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
-        # sprit_weight = [0, 8, 6, 4, 2]
-        # profession = ['When/If you are in {0},when would you do {1}?'.format(situation,
-        #                                                                      subject), Lf.need["need"][1], Lf.wish["wish"][1], Lf.desire["desire"][1], Lf.want["want"][1]]
-        # profession_weight = [0, 2, 4, 6, 8]
-        # purpose = ['When/If you are in {0},who would you do {1}?'.format(situation,
-        #                                                                  subject), Lf.need["need"][2], Lf.wish["wish"][2], Lf.desire["desire"][2], Lf.want["want"][2]]
-        # purpose_weight = [0, 8, 6, 4, 2]
-        # reward = ['When/If you are in {0},what would you like in return for doing {1}?'.format(situation,
-        #                                                                                        subject), Lf.need["need"][3], Lf.wish["wish"][3], Lf.desire["desire"][3], Lf.want["want"][3]]
-        # reward_weight = [0, 2, 4, 6, 8]
-
-        # dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
-        #         'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
-        # df = pd.DataFrame(dict)
-
-        # filename = 'after_'+instance.question_type+'_Subject:' + \
-        #     Lf.subject+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename,
-        #                  approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        # filename = 'before_'+instance.question_type+'_Subject:' + \
-        #     Lf.subject+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df,
-        #                  title=filename, approver_email='', admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        row = ["Open", str(datetime.datetime.now()), subject, situation, Lf.need["need"][0], Lf.need["need"][1], Lf.need["need"][2], Lf.need["need"][3], Lf.wish["wish"][0], Lf.wish["wish"][1], Lf.wish["wish"][2], Lf.wish["wish"][3], Lf.desire["desire"][0], Lf.desire["desire"][1], Lf.desire["desire"][2], Lf.desire["desire"][3], Lf.want["want"][0], Lf.want["want"][1], Lf.want["want"][2], Lf.want["want"][3], str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(
-            datetime.datetime.now()), subject, situation, Lf.need["need"][0], Lf.need["need"][1], Lf.need["need"][2], Lf.need["need"][3], Lf.wish["wish"][0], Lf.wish["wish"][1], Lf.wish["wish"][2], Lf.wish["wish"][3], Lf.desire["desire"][0], Lf.desire["desire"][1], Lf.desire["desire"][2], Lf.desire["desire"][3], Lf.want["want"][0], Lf.want["want"][1], Lf.want["want"][2], Lf.want["want"][3], str(instance.user.user_id), str(instance.approver.user_id)]
-
+        
+        row1 = ["Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},why would you {1}?'.format(situation,subject),Lf.need["need"][0],8, Lf.wish["wish"][0],6, Lf.desire["desire"][0],4,  Lf.want["want"][0],2, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},why would you {1}?'.format(situation,subject),Lf.need["need"][0],8, Lf.wish["wish"][0],6, Lf.desire["desire"][0],4,  Lf.want["want"][0],2, str(instance.user.user_id), str(instance.approver.user_id)]
+        row2 = ["Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},when would you do {1}?'.format(situation,subject) ,Lf.need["need"][1],2, Lf.wish["wish"][1],4, Lf.desire["desire"][1],6,  Lf.want["want"][1],8, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},when would you do {1}?'.format(situation,subject) ,Lf.need["need"][1],2, Lf.wish["wish"][1],4, Lf.desire["desire"][1],6,  Lf.want["want"][1],8, str(instance.user.user_id), str(instance.approver.user_id)]
+        row3 = ["Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},who would you do {1}?'.format(situation,subject) ,Lf.need["need"][2],8, Lf.wish["wish"][2],6, Lf.desire["desire"][2],4,  Lf.want["want"][2],2, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},who would you do {1}?'.format(situation,subject) ,Lf.need["need"][2],8, Lf.wish["wish"][2],6, Lf.desire["desire"][2],4,  Lf.want["want"][2],2, str(instance.user.user_id), str(instance.approver.user_id)]
+        row4 = ["Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},what would you like in return for doing {1}?'.format(situation,subject) ,Lf.need["need"][3],2, Lf.wish["wish"][3],4, Lf.desire["desire"][3],6,  Lf.want["want"][3],8, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},what would you like in return for doing {1}?'.format(situation,subject) ,Lf.need["need"][3],2, Lf.wish["wish"][3],4, Lf.desire["desire"][3],6,  Lf.want["want"][3],8, str(instance.user.user_id), str(instance.approver.user_id)]
+        
         sheet_id = get_object_or_404(
             Sheet, question_type='Life Vector').sheetID
-        Util.excel_sheet2(service_excel=service_excel,
-                          row=row, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row1, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row2, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row3, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row4, sheet_id=sheet_id)
 
     elif instance.question_type == 'LM':
         lm = instance.Lm
@@ -193,41 +171,17 @@ def create_excel(sender, instance, **kwargs):
 
         subject = Lf.subject
         situation = Lf.situation
-        # sprit = ['When/If you are in {0},why would you {1}?'.format(situation,
-        #                                                             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
-        # sprit_weight = [0, 8, 6, 4, 2]
-        # profession = ['When/If you are in {0},when would you do {1}?'.format(situation,
-        #                                                                      subject), Lf.need["need"][1], Lf.wish["wish"][1], Lf.desire["desire"][1], Lf.want["want"][1]]
-        # profession_weight = [0, 2, 4, 6, 8]
-        # purpose = ['When/If you are in {0},who would you do {1}?'.format(situation,
-        #                                                                  subject), Lf.need["need"][2], Lf.wish["wish"][2], Lf.desire["desire"][2], Lf.want["want"][2]]
-        # purpose_weight = [0, 8, 6, 4, 2]
-        # reward = ['When/If you are in {0},what would you like in return for doing {1}?'.format(situation,
-        #                                                                                        subject), Lf.need["need"][3], Lf.wish["wish"][3], Lf.desire["desire"][3], Lf.want["want"][3]]
-        # reward_weight = [0, 2, 4, 6, 8]
-
-        # dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
-        #         'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
-
-        # df = pd.DataFrame(dict)
-
-        # filename = 'after_'+instance.question_type+'_Subject:' + \
-        #     Lf.subject+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename,
-        #                  approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        # filename = 'before_'+instance.question_type+'_Subject:' + \
-        #     Lf.subject+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df,
-        #                  title=filename, approver_email='', admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        row = ["Open", str(datetime.datetime.now()), subject, situation, Lf.need["need"][0], Lf.need["need"][1], Lf.need["need"][2], Lf.need["need"][3], Lf.wish["wish"][0], Lf.wish["wish"][1], Lf.wish["wish"][2], Lf.wish["wish"][3], Lf.desire["desire"][0], Lf.desire["desire"][1], Lf.desire["desire"][2], Lf.desire["desire"][3], Lf.want["want"][0], Lf.want["want"][1], Lf.want["want"][2], Lf.want["want"][3], str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(
-            datetime.datetime.now()), subject, situation, Lf.need["need"][0], Lf.need["need"][1], Lf.need["need"][2], Lf.need["need"][3], Lf.wish["wish"][0], Lf.wish["wish"][1], Lf.wish["wish"][2], Lf.wish["wish"][3], Lf.desire["desire"][0], Lf.desire["desire"][1], Lf.desire["desire"][2], Lf.desire["desire"][3], Lf.want["want"][0], Lf.want["want"][1], Lf.want["want"][2], Lf.want["want"][3], str(instance.user.user_id), str(instance.approver.user_id)]
-
-        sheet_id = get_object_or_404(
-            Sheet, question_type='Learning Method').sheetID
-        Util.excel_sheet2(service_excel=service_excel,
-                          row=row, sheet_id=sheet_id)
+        
+        row1 = ["Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},why would you {1}?'.format(situation,subject),Lf.need["need"][0],8, Lf.wish["wish"][0],6, Lf.desire["desire"][0],4,  Lf.want["want"][0],2, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},why would you {1}?'.format(situation,subject),Lf.need["need"][0],8, Lf.wish["wish"][0],6, Lf.desire["desire"][0],4,  Lf.want["want"][0],2, str(instance.user.user_id), str(instance.approver.user_id)]
+        row2 = ["Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},when would you do {1}?'.format(situation,subject) ,Lf.need["need"][1],2, Lf.wish["wish"][1],4, Lf.desire["desire"][1],6,  Lf.want["want"][1],8, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},when would you do {1}?'.format(situation,subject) ,Lf.need["need"][1],2, Lf.wish["wish"][1],4, Lf.desire["desire"][1],6,  Lf.want["want"][1],8, str(instance.user.user_id), str(instance.approver.user_id)]
+        row3 = ["Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},who would you do {1}?'.format(situation,subject) ,Lf.need["need"][2],8, Lf.wish["wish"][2],6, Lf.desire["desire"][2],4,  Lf.want["want"][2],2, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},who would you do {1}?'.format(situation,subject) ,Lf.need["need"][2],8, Lf.wish["wish"][2],6, Lf.desire["desire"][2],4,  Lf.want["want"][2],2, str(instance.user.user_id), str(instance.approver.user_id)]
+        row4 = ["Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},what would you like in return for doing {1}?'.format(situation,subject) ,Lf.need["need"][3],2, Lf.wish["wish"][3],4, Lf.desire["desire"][3],6,  Lf.want["want"][3],8, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open Leading", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},what would you like in return for doing {1}?'.format(situation,subject) ,Lf.need["need"][3],2, Lf.wish["wish"][3],4, Lf.desire["desire"][3],6,  Lf.want["want"][3],8, str(instance.user.user_id), str(instance.approver.user_id)]
+        
+        sheet_id = get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID
+        Util.excel_sheet2(service_excel=service_excel,row=row1, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row2, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row3, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row4, sheet_id=sheet_id)
 
 
 @receiver(post_save, sender=Closed, dispatch_uid="closed_create_excel")
@@ -237,65 +191,22 @@ def create_excel(sender, instance, **kwargs):
 
         subject = Lf.subject
         situation = Lf.situation
-        # sprit = ['When/If you are in {0},why would you {1}?'.format(situation,
-        #                                                             subject), Lf.need["need"][0], Lf.wish["wish"][0], Lf.desire["desire"][0], Lf.want["want"][0]]
-        # sprit_weight = [0, 8, 6, 4, 2]
-        # profession = ['When/If you are in {0},when would you do {1}?'.format(situation,
-        #                                                                      subject), Lf.need["need"][1], Lf.wish["wish"][1], Lf.desire["desire"][1], Lf.want["want"][1]]
-        # profession_weight = [0, 2, 4, 6, 8]
-        # purpose = ['When/If you are in {0},who would you do {1}?'.format(situation,
-        #                                                                  subject), Lf.need["need"][2], Lf.wish["wish"][2], Lf.desire["desire"][2], Lf.want["want"][2]]
-        # purpose_weight = [0, 8, 6, 4, 2]
-        # reward = ['When/If you are in {0},what would you like in return for doing {1}?'.format(situation,
-        #                                                                                        subject), Lf.need["need"][3], Lf.wish["wish"][3], Lf.desire["desire"][3], Lf.want["want"][3]]
-        # reward_weight = [0, 2, 4, 6, 8]
 
-        # dict = {'Sprit': sprit, 'w1': sprit_weight, 'Profession': profession, 'w2': profession_weight,
-        #         'Purpose': purpose, 'w3': purpose_weight, 'Reward': reward, 'w4': reward_weight}
-
-        # df = pd.DataFrame(dict)
-
-        # filename = 'after_'+instance.question_type+'_Subject:' + \
-        #     Lf.subject+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename,
-        #                  approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        # filename = 'before_'+instance.question_type+'_Subject:' + \
-        #     Lf.subject+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df,
-        #                  title=filename, approver_email='', admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        row = ["Open", str(datetime.datetime.now()), subject, situation, Lf.need["need"][0], Lf.need["need"][1], Lf.need["need"][2], Lf.need["need"][3], Lf.wish["wish"][0], Lf.wish["wish"][1], Lf.wish["wish"][2], Lf.wish["wish"][3], Lf.desire["desire"][0], Lf.desire["desire"][1], Lf.desire["desire"][2], Lf.desire["desire"][3], Lf.want["want"][0], Lf.want["want"][1], Lf.want["want"][2], Lf.want["want"][3], str(instance.user.user_id), str(instance.approver.user_id), "", "", "Open", str(
-            datetime.datetime.now()), subject, situation, Lf.need["need"][0], Lf.need["need"][1], Lf.need["need"][2], Lf.need["need"][3], Lf.wish["wish"][0], Lf.wish["wish"][1], Lf.wish["wish"][2], Lf.wish["wish"][3], Lf.desire["desire"][0], Lf.desire["desire"][1], Lf.desire["desire"][2], Lf.desire["desire"][3], Lf.want["want"][0], Lf.want["want"][1], Lf.want["want"][2], Lf.want["want"][3], str(instance.user.user_id), str(instance.approver.user_id)]
-
+        row1 = ["Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},why would you {1}?'.format(situation,subject),Lf.need["need"][0],8, Lf.wish["wish"][0],6, Lf.desire["desire"][0],4,  Lf.want["want"][0],2, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},why would you {1}?'.format(situation,subject),Lf.need["need"][0],8, Lf.wish["wish"][0],6, Lf.desire["desire"][0],4,  Lf.want["want"][0],2, str(instance.user.user_id), str(instance.approver.user_id)]
+        row2 = ["Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},when would you do {1}?'.format(situation,subject) ,Lf.need["need"][1],2, Lf.wish["wish"][1],4, Lf.desire["desire"][1],6,  Lf.want["want"][1],8, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},when would you do {1}?'.format(situation,subject) ,Lf.need["need"][1],2, Lf.wish["wish"][1],4, Lf.desire["desire"][1],6,  Lf.want["want"][1],8, str(instance.user.user_id), str(instance.approver.user_id)]
+        row3 = ["Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},who would you do {1}?'.format(situation,subject) ,Lf.need["need"][2],8, Lf.wish["wish"][2],6, Lf.desire["desire"][2],4,  Lf.want["want"][2],2, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},who would you do {1}?'.format(situation,subject) ,Lf.need["need"][2],8, Lf.wish["wish"][2],6, Lf.desire["desire"][2],4,  Lf.want["want"][2],2, str(instance.user.user_id), str(instance.approver.user_id)]
+        row4 = ["Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},what would you like in return for doing {1}?'.format(situation,subject) ,Lf.need["need"][3],2, Lf.wish["wish"][3],4, Lf.desire["desire"][3],6,  Lf.want["want"][3],8, str(instance.user.user_id), str(instance.approver.user_id), "", "", "Closed", str(datetime.datetime.now()), subject, situation,'When/If you are in {0},what would you like in return for doing {1}?'.format(situation,subject) ,Lf.need["need"][3],2, Lf.wish["wish"][3],4, Lf.desire["desire"][3],6,  Lf.want["want"][3],8, str(instance.user.user_id), str(instance.approver.user_id)]
+        
         sheet_id = get_object_or_404(
-            Sheet, question_type='Learning Method').sheetID
-        Util.excel_sheet2(service_excel=service_excel,
-                          row=row, sheet_id=sheet_id)
+            Sheet, question_type='Intelligent Dummy').sheetID
+        Util.excel_sheet2(service_excel=service_excel,row=row1, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row2, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row3, sheet_id=sheet_id)
+        Util.excel_sheet2(service_excel=service_excel,row=row4, sheet_id=sheet_id)
 
     elif instance.question_type == 'DQ':
         dummy = instance.Dummy
-        # parameters = [dummy.question_type, dummy.category,
-        #               dummy.sub_category, dummy.decade, dummy.genre, dummy.word]
-        # name_parameters = ['Question Type', 'Category',
-        #                    'Sub Category', 'Decade', 'Genre', 'Word']
-        # question_string = dummy.question_type+' '+dummy.category+' by '+dummy.sub_category + \
-        #     ' was the '+dummy.decade+' in ' + dummy.genre+' of the '+dummy.word
-        # question = [str(question_string), '', '', '', '', '']
-        # answer = [dummy.selection, '', '', '', '', '']
-
-        # dict = {'': name_parameters, 'Input': parameters,
-        #         'Question Formed': question, 'Answer Selected': answer}
-        # df = pd.DataFrame(dict)
-
-        # filename = 'after_'+instance.question_type+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df, title=filename,
-        #                  approver_email=instance.approverEmail.email, admin_email=['unijay12@gmail.com'], question_type='LF')
-
-        # filename = 'before_'+instance.question_type+'_Createdby:'+instance.user.email
-        # Util.excel_sheet(service_excel=service_excel, service_drive=service_drive, data=df,
-        #                  title=filename, approver_email='', admin_email=['unijay12@gmail.com'], question_type='LF')
-
+        
         row = ['Closed', str(datetime.datetime.now()), dummy.question_type, dummy.category, dummy.sub_category, dummy.decade, dummy.genre, dummy.word, dummy.selection, str(instance.user.user_id), str(instance.approverEmail.user_id), "", "", 'Closed', str(
             datetime.datetime.now()), dummy.question_type, dummy.category, dummy.sub_category, dummy.decade, dummy.genre, dummy.word, dummy.selection, str(instance.user.user_id), str(instance.approverEmail.user_id)]
 
