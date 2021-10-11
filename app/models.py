@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from .credentials import creds
 from googleapiclient import model
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
@@ -16,11 +15,8 @@ from pyasn1.type.univ import Choice
 import datetime
 
 from users.models import CustomUser
-# # Create your models here.
 from .semi_models import *
 from .utils import Util
-# Open Leading - Inteligent Dummy(Life vector ,subject is to given by api)
-# Closed - Dummy,Inteligent Dummy (Life vector ,subject is to given by api)
 
 
 class Sheet(models.Model):
@@ -44,9 +40,8 @@ class Dummy(models.Model):
     selection2 = models.CharField(max_length=100, null=True)
     answer=models.CharField(max_length=100, null=True)
 
-# class LearningMethod(models.Model):
-#     sitution=models.CharField(max_length=300)
-#     behaviour_values=JSONField(null=False)
+    def __str__(self):
+        return self.question_type
 
 
 class LifeVector(models.Model):
@@ -92,15 +87,14 @@ class Qpen(models.Model):
 class Closed(models.Model):
     ClosedQuestionType = [('DQ', 'Dummy Question'), ('ID', 'Inteligent Dummy')]
     question_type = models.CharField(max_length=3, choices=ClosedQuestionType)
-    user = models.ForeignKey(
-        CustomUser, on_delete=CASCADE, related_name="closed_question", null=False)
     IDummy = models.ForeignKey(
         LifeVector, null=True, blank=True, on_delete=CASCADE)
     Dummy = models.ForeignKey(Dummy, null=True, blank=True, on_delete=CASCADE)
 
-    excelLink = models.URLField(blank=True, null=True)
     approverEmail = models.ForeignKey(
         CustomUser, on_delete=CASCADE, related_name="closed_approver", null=True)
+    user = models.ForeignKey(
+        CustomUser, on_delete=CASCADE, related_name="closed_question", null=False)
 
     def __str__(self):
         if self.question_type == 'DQ':
@@ -112,12 +106,12 @@ class Closed(models.Model):
 class OpenLeading(models.Model):
     OpenLeading = [('ID', 'Inteligent Dummy')]
     question_type = models.CharField(max_length=3, choices=OpenLeading)
-    user = models.ForeignKey(
-        CustomUser, on_delete=CASCADE, related_name="open_leading_question", null=False)
     IDummy = models.ForeignKey(
         LifeVector, null=True, blank=True, on_delete=CASCADE)
 
-    excelLink = models.URLField(blank=True, null=True)
+    user = models.ForeignKey(
+        CustomUser, on_delete=CASCADE, related_name="open_leading_question", null=False)
+
     approverEmail = models.ForeignKey(
         CustomUser, on_delete=CASCADE, related_name="openleading_approver", null=True)
 
@@ -125,7 +119,7 @@ class OpenLeading(models.Model):
         if self.question_type == 'ID':
             return self.question_type+' | '+self.IDummy.subject+' | '+self.user.email
 
-
+from .credentials import creds
 # authorize the clientsheet
 service_excel = build('sheets', 'v4', credentials=creds)
 service_drive = build('drive', 'v2', credentials=creds)
