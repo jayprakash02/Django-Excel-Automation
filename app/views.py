@@ -49,15 +49,16 @@ class ClosedQuestionAPI(APIView):
                 CustomUser.objects.filter(staff_type='A'), many=True)
             question_type = request.query_params["question_type"]
             if question_type == 'DQ':
-                try:
-                    if request.query_params["answer"]:
-                        answer_selected = get_object_or_404(
-                            DummyList, answer=request.query_params["answer"])
-                        question_data = DummyListSerializer(
-                            answer_selected).data
-                        return Response(question_data, status=status.HTTP_202_ACCEPTED)
-                except:
-                    pass
+                # try:
+                if request.query_params["answer"]:
+                    answer_selected = get_object_or_404(
+                        DummyList, answer=request.query_params["answer"])
+                    question_data = DummyListSerializer(
+                        answer_selected).data
+                    selection_data=DummySelectionSerializer(DummyAnswersList.objects.all(),many=True).data
+                    return Response({"question":question_data,"selection":selection_data}, status=status.HTTP_202_ACCEPTED)
+                # except:
+                #     pass
                 answers = DummyAnswerSerializer(
                     DummyList.objects.all(), many=True).data
                 data = {'approver': user_data.data, 'answers': answers}
@@ -155,16 +156,18 @@ class ClosedQuestionAPI(APIView):
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Inteligent Dummy', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'DQ':
-                if self.request.data.__contains__("question") and self.request.data.__contains__("category") and self.request.data.__contains__("sub_category") and self.request.data.__contains__("decade") and self.request.data.__contains__("genre") and self.request.data.__contains__("word") and self.request.data.__contains__("selection"):
+                if self.request.data.__contains__("question") and self.request.data.__contains__("category") and self.request.data.__contains__("sub_category") and self.request.data.__contains__("decade") and self.request.data.__contains__("genre") and self.request.data.__contains__("word") and self.request.data.__contains__("selection1") and self.request.data.__contains__("selection2") and self.request.data.__contains__("answer"):
                     question = self.request.data['question']
                     category = self.request.data['category']
                     sub_category = self.request.data['sub_category']
                     decade = self.request.data['decade']
                     genre = self.request.data['genre']
                     word = self.request.data['word']
-                    selection = self.request.data['selection']
+                    selection1 = self.request.data['selection1']
+                    selection2 = self.request.data['selection2']
+                    answer = self.request.data['answer']
                     dummy_intance = Dummy.objects.create(
-                        question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection=selection)
+                        question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection1=selection1,selection2=selection2,answer=answer)
                     dummy_intance.save()
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, approverEmail=approver, Dummy=dummy_intance)
@@ -273,7 +276,7 @@ class OpenLeadingQuestionAPI(APIView):
 
 class OpenQuestionAPI(APIView):
     question_type = openapi.Parameter(
-        'question_type', in_=openapi.IN_QUERY, description='LF or LM', type=openapi.TYPE_STRING, required=True)
+        'question_type', in_=openapi.IN_QUERY, description='LV or LM', type=openapi.TYPE_STRING, required=True)
 
     @swagger_auto_schema(manual_parameters=[question_type])
     def get(self, request):
@@ -282,7 +285,7 @@ class OpenQuestionAPI(APIView):
             user_data = ApproverSerializer(
                 CustomUser.objects.filter(staff_type='A'), many=True)
             question_type = request.query_params["question_type"]
-            if question_type == 'LF':
+            if question_type == 'LV':
 
                 emotion_Spirit = EmotionSerializer(
                     Emotion.objects.filter(choice='Spirit'), many=True).data

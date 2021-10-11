@@ -105,6 +105,18 @@ class DummyList(models.Model):
     def __str__(self):
         return self.answer
 
+class DummyAnswersList(models.Model):
+    answer= models.CharField(max_length=100)
+    sub_category = models.ForeignKey(
+        SubCategory,  null=True, blank=True,related_name='dummyanslist_c',on_delete=CASCADE)
+    genre = models.ForeignKey(
+        Genre, null=True, related_name='dummyanslist_genre',on_delete=CASCADE)
+    decade = models.ForeignKey(
+        Decade, null=True, related_name='dummyanslist_decade',on_delete=CASCADE)
+    word = models.ForeignKey(
+        WordTypeForDummy, null=True, related_name='dummyanslist_word',on_delete=CASCADE)
+
+
 
 class Visual(models.Model):
     answer = models.CharField(max_length=50)

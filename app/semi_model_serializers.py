@@ -70,6 +70,16 @@ class DummyListSerializer(serializers.ModelSerializer):
         model = DummyList
         fields = ['question', 'category', 'genre', 'decade', 'word']
 
+class DummySelectionSerializer(serializers.ModelSerializer):
+    sub_category = SubCategorySerializer(read_only=True)
+    genre = GenreSerializer(read_only=True)
+    decade = DecadeSerializer(read_only=True)
+    question = QuestionTypeForDummySerializer(read_only=True)
+    word = WordTypeForDummySerializer(read_only=True)
+
+    class Meta:
+        model = DummyAnswersList
+        fields = ['answer','question', 'sub_category', 'genre', 'decade', 'word']
 
 class DummyAnswerSerializer(serializers.ModelSerializer):
     class Meta:
