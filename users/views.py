@@ -86,11 +86,11 @@ class RegisterView(generics.GenericAPIView):
                 relativeApproveLink = reverse('users:approver-verify')
                 abs_emailurl = current_site + \
                     relativeApproveLink + "?id="+str(user.user_id)
-                email_body = 'Username: '+user.username + '\nEmail: '+user.email + \
+                email_body_a = 'Username: '+user.username + '\nEmail: '+user.email + \
                     '\nHad applied for the <strong> Approvers </strong> position.\n Use the link below to Approved\n'+abs_emailurl
-                data = {'email_body': email_body, 'to_email': ADMIN_MAIL,
+                data_a = {'email_body': email_body_a, 'to_email': ADMIN_MAIL,
                         'email_subject': 'Verify the Approver '+str(user.email), 'email_link': abs_emailurl}
-                Util.send_email(data)
+                Util.send_email(data_a)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
