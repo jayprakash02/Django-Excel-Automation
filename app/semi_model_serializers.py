@@ -58,6 +58,13 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['answer', 'sub_category']
 
+class CategoryListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['answer']
+
+
 
 class DummyListSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True, many=True)

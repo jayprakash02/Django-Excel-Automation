@@ -51,10 +51,10 @@ class ClosedQuestionAPI(APIView):
             if question_type == 'DQ':
                 try:
                     if request.query_params["answer"]:
-                        answer_selected = get_object_or_404(
-                            DummyList, answer=request.query_params["answer"])
+                        category_selected = get_object_or_404(
+                            Category, answer=request.query_params["answer"])
                         question_data = DummyListSerializer(
-                            answer_selected).data
+                            category_selected.dummylist_c.all(),many=True).data
                         return Response(question_data, status=status.HTTP_202_ACCEPTED)
                 except:
                     pass
@@ -68,8 +68,8 @@ class ClosedQuestionAPI(APIView):
                         return Response(selection_data, status=status.HTTP_202_ACCEPTED)
                 except:
                     pass
-                answers = DummyAnswerSerializer(
-                    DummyList.objects.all(), many=True).data
+                answers = CategoryListSerializer(
+                    Category.objects.all(), many=True).data
                 data = {'approver': user_data.data, 'answers': answers}
                 return Response(data, status=status.HTTP_202_ACCEPTED)
 
