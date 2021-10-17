@@ -67,7 +67,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://localhost:8081',
-    'https://question-generator.netlify.app', 
+    'https://question-generator.netlify.app',
 
 ]
 # CORS_ALLOW_HEADERS = ['Set-Cookie']
@@ -115,13 +115,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '{}'.format(os.environ.get('POSTGRES_DB')),
+        'USER': '{}'.format(os.environ.get('POSTGRES_USER')),
+        'PASSWORD': '{}'.format(os.environ.get('POSTGRES_PASSWORD')),
+        'HOST': '{}'.format(os.environ.get('POSTGRES_HOST')),
+        'PORT': '{}'.format(os.environ.get('POSTGRES_PORT'))
     }
+
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
