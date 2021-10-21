@@ -125,10 +125,10 @@ class ClosedQuestionAPI(APIView):
                 feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
                            'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
-                question1 = 'Why would you do (this)?'
-                question2 = 'When would you do (this)?'
-                question3 = 'Who would you do (this)?'
-                question4 = 'What would you like in return for doing (this)?'
+                question1 = 'When/ If you are in <scenario>, Why would you do (this)?'
+                question2 = 'When/ If you are in <scenario>, When would you do (this)?'
+                question3 = 'When/ If you are in <scenario>, Who would you do (this)?'
+                question4 = 'When/ If you are in <scenario>, What would you like in return for doing (this)?'
 
                 question = [question1, question2, question3, question4]
 
@@ -247,10 +247,10 @@ class OpenLeadingQuestionAPI(APIView):
         feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
                    'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
-        question1 = 'Why would you do (this)?'
-        question2 = 'When would you do (this)?'
-        question3 = 'Who would you do (this)?'
-        question4 = 'What would you like in return for doing (this)?'
+        question1 = 'When/ If you are in <scenario>, why would you (this)?'
+        question2 = 'When/ If you are in <scenario>, When would you do (this)?'
+        question3 = 'When/ If you are in <scenario>, Who would you do (this)?'
+        question4 = 'When/ If you are in <scenario>, What would you like in return for doing (this)?'
 
         question = [question1, question2, question3, question4]
 
@@ -349,10 +349,10 @@ class OpenQuestionAPI(APIView):
                 feeling = {'Spirit': feeling_Spirit, 'Profession': feeling_Profession,
                            'Purpose': feeling_Purpose, 'Reward': feeling_Reward}
 
-                question1 = 'Why would you do (this)?'
-                question2 = 'When would you do (this)?'
-                question3 = 'Who would you do (this)?'
-                question4 = 'What would you like in return for doing (this)?'
+                question1 = 'When/ If you are in <scenario>, Why would you do (this)?'
+                question2 = 'When/ If you are in <scenario>, When would you do (this)?'
+                question3 = 'When/ If you are in <scenario>, Who would you do (this)?'
+                question4 = 'When/ If you are in <scenario>, What would you like in return for doing (this)?'
 
                 question = [question1, question2, question3, question4]
 
