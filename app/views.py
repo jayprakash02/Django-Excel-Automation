@@ -54,17 +54,22 @@ class ClosedQuestionAPI(APIView):
                         category_selected = get_object_or_404(
                             Category, answer=request.query_params["answer"])
                         question_data = DummyListSerializer(
-                            category_selected.dummylist_c.all(),many=True).data
+                            category_selected.dummylist_c.all(), many=True).data
                         return Response(question_data, status=status.HTTP_202_ACCEPTED)
                 except:
                     pass
                 try:
                     if request.query_params["sub_category"] and request.query_params["genre"] and request.query_params["decade"]:
-                        sub_category=get_object_or_404(SubCategory,answer=request.query_params["sub_category"])
-                        genre=get_object_or_404(Genre,answer=request.query_params["genre"])
-                        decade=get_object_or_404(Decade,answer=request.query_params["decade"])
-                        selection = DummyAnswersList.objects.filter(sub_category=sub_category).filter(genre=genre).filter(decade=decade)
-                        selection_data=DummySelectionSerializer(selection,many=True).data
+                        sub_category = get_object_or_404(
+                            SubCategory, answer=request.query_params["sub_category"])
+                        genre = get_object_or_404(
+                            Genre, answer=request.query_params["genre"])
+                        decade = get_object_or_404(
+                            Decade, answer=request.query_params["decade"])
+                        selection = DummyAnswersList.objects.filter(
+                            sub_category=sub_category).filter(genre=genre).filter(decade=decade)
+                        selection_data = DummySelectionSerializer(
+                            selection, many=True).data
                         return Response(selection_data, status=status.HTTP_202_ACCEPTED)
                 except:
                     pass
@@ -142,10 +147,6 @@ class ClosedQuestionAPI(APIView):
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
-            approver_instance = ApproverNotification.objects.create(
-                user=approver)
-            approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
-            approver_instance.save()
             if question_type == 'ID':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -160,9 +161,12 @@ class ClosedQuestionAPI(APIView):
                     lf_instance.save()
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, IDummy=lf_instance)
-    
-                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
-                    approver_instance.save()
+
+                    excelLink = 'https://docs.google.com/spreadsheets/d/' + \
+                        get_object_or_404(
+                            Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
+                    ApproverNotification.objects.create(
+                        user=approver, excelLink=excelLink)
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Inteligent Dummy', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'DQ':
@@ -177,13 +181,16 @@ class ClosedQuestionAPI(APIView):
                     selection2 = self.request.data['selection2']
                     answer = self.request.data['answer']
                     dummy_intance = Dummy.objects.create(
-                        question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection1=selection1,selection2=selection2,answer=answer)
+                        question_type=question, category=category, sub_category=sub_category, decade=decade, genre=genre, word=word, selection1=selection1, selection2=selection2, answer=answer)
                     dummy_intance.save()
                     question_instance = Closed.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Dummy=dummy_intance)
 
-                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Dummy').sheetID+'/edit#gid=0'
-                    approver_instance.save()
+                    excelLink = 'https://docs.google.com/spreadsheets/d/' + \
+                        get_object_or_404(
+                            Sheet, question_type='Dummy').sheetID+'/edit#gid=0'
+                    ApproverNotification.objects.create(
+                        user=approver, excelLink=excelLink)
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Dummy Question', status=status.HTTP_400_BAD_REQUEST)
         return Response('Question Type or ID is missing', status=status.HTTP_400_BAD_REQUEST)
@@ -259,8 +266,6 @@ class OpenLeadingQuestionAPI(APIView):
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
-            approver_instance = ApproverNotification.objects.create(
-                user=approver)
             if question_type == 'ID':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -276,8 +281,11 @@ class OpenLeadingQuestionAPI(APIView):
                     question_instance = OpenLeading.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, IDummy=lf_instance)
 
-                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
-                    approver_instance.save()
+                    excelLink = 'https://docs.google.com/spreadsheets/d/' + \
+                        get_object_or_404(
+                            Sheet, question_type='Intelligent Dummy').sheetID+'/edit#gid=0'
+                    ApproverNotification.objects.create(
+                        user=approver, excelLink=excelLink)
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Intelligent Dummy', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'LM':
@@ -376,9 +384,7 @@ class OpenQuestionAPI(APIView):
             user_instance = CustomUser.objects.get(user_id=user_id)
             approver_id = self.request.data["approver"]
             approver = get_object_or_404(CustomUser, user_id=approver_id)
-            approver_instance = ApproverNotification.objects.create(
-                user=approver)
-            
+
             if question_type == 'LV':
                 if self.request.data.__contains__("subject") and self.request.data.__contains__("situation") and self.request.data.__contains__("tags") and self.request.data.__contains__("need") and self.request.data.__contains__("wish") and self.request.data.__contains__("desire") and self.request.data.__contains__("want"):
                     subject = self.request.data["subject"]
@@ -393,8 +399,11 @@ class OpenQuestionAPI(APIView):
                     lf_instance.save()
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Lf=lf_instance)
-                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Life Vector').sheetID+'/edit#gid=0'
-                    approver_instance.save()
+                    excelLink = 'https://docs.google.com/spreadsheets/d/' + \
+                        get_object_or_404(
+                            Sheet, question_type='Life Vector').sheetID+'/edit#gid=0'
+                    ApproverNotification.objects.create(
+                        user=approver, excelLink=excelLink)
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response('Doesnt meet requirement for Life Vector', status=status.HTTP_400_BAD_REQUEST)
             elif question_type == 'LM':
@@ -410,7 +419,10 @@ class OpenQuestionAPI(APIView):
                     lm_instance.save()
                     openquestion_instance = Qpen.objects.create(
                         question_type=question_type, user=user_instance, approver=approver, Lm=lm_instance)
-                    approver_instance.excelLink='https://docs.google.com/spreadsheets/d/'+get_object_or_404(Sheet, question_type='Learning Method').sheetID+'/edit#gid=0'
-                    approver_instance.save()
+                    excelLink = 'https://docs.google.com/spreadsheets/d/' + \
+                        get_object_or_404(
+                            Sheet, question_type='Learning Method').sheetID+'/edit#gid=0'
+                    ApproverNotification.objects.create(
+                        user=approver, excelLink=excelLink)
                     return Response(status=status.HTTP_202_ACCEPTED)
         return Response('Question Type or ID is missing', status=status.HTTP_400_BAD_REQUEST)
