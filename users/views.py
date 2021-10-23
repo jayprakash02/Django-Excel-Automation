@@ -273,7 +273,7 @@ class VerifyApprovers(views.APIView):
                 user = CustomUser.objects.get(user_id=user_id)
                 user.staff_type = 'A'
                 user.save()
-                Util.excel_sheet(service_drive,user.email)
+                Util.excel_sheet(service_drive=service_drive,approver_email=user.email)
                 return Response('User is now Approver', status=status.HTTP_202_ACCEPTED)
             return Response('User does not exist', status=status.HTTP_400_BAD_REQUEST)
         return Response('id missing', status=status.HTTP_400_BAD_REQUEST)
